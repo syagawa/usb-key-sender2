@@ -131,7 +131,7 @@ void initSettings(char * version, char * initialDataStr){
     if(f){
       // fprintf(f, initialDataStr);
       fputs(initialDataStr, f);
-      fsync(fileno(f));
+      // f_sync(fileno(f));
       fclose(f);
     }else{
       ESP_LOGE(TAG, "Failed to open file for writing");
@@ -143,7 +143,7 @@ void initSettings(char * version, char * initialDataStr){
     if(f1){
       // fprintf(f1, version);
       fputs(version, f1);
-      fsync(fileno(f1));
+      // f_sync(fileno(f1));
       fclose(f1);
     }else{
       ESP_LOGE(TAG, "Failed to open file for writing");
@@ -155,7 +155,7 @@ void initSettings(char * version, char * initialDataStr){
     if(f2){
       // fprintf(f2, readmeStr);
       fputs(readmeStr, f2);
-      fsync(fileno(f2));
+      // f_sync(fileno(f2));
       fclose(f2);
     }else{
       ESP_LOGE(TAG, "Failed to open file for writing");
