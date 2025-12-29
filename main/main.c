@@ -131,7 +131,6 @@ void enterMain(){
   pressUpAction = action2;
   longPressedAction = action3;
 
-
   initSettings(versionStr, initialDataStr);
 
   cJSON *json_arr = getSettingArrayAsJSONByKey("keys");

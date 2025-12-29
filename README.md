@@ -22,12 +22,30 @@ $ esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x6F0000
 
 idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Device Class (HID), setting TINYUSB_HID_COUNT to a value greater than 0 will enable TinyUSB HID.
 
-## reset build
+## build
 
+### initial build
+1. long press reset button
+2. click build button (spanner icon) at extension.
+3. remove usb and connect
+4. long press reset button
+  * 
+  ```bash
+  #clear rom
+  $ esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x100000
+  ```
+5. remove usb and connect usb with button pressing
+6. edit settings 
+7. remove removal device at pc
+
+
+### reset
 ```bash
 $ idf.py fullclean
 $ idf.py build flash monitor
 ```
+
+
 
 ## flash size to 8MB
 
