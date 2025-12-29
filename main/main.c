@@ -45,7 +45,7 @@ char * buttonColor = "";
 // #include "app.h"
 
 const char * initialDataStr = "{\"settings_mode\": \"storage\", \"color\": \"red\", \"keys\": [\"sample1\", \"sample2\", \"example-111\"]}";
-const char * versionStr = "usb-key-sender-2.0.0";
+static const char * readmeStr = "usb-key-sender-2.0.0\nReset Settings: Delete settings.txt and remove this USB from PC.";
 
 int keyIndex = 0;
 char *keys[MaxLength];
@@ -131,7 +131,7 @@ void enterMain(){
   pressUpAction = action2;
   longPressedAction = action3;
 
-  initSettings(versionStr, initialDataStr);
+  initSettings(readmeStr, initialDataStr);
 
   cJSON *json_arr = getSettingArrayAsJSONByKey("keys");
   if (cJSON_IsArray(json_arr)) {
@@ -164,7 +164,7 @@ void app_main(void){
     ESP_LOGI(TAG, "restarted esp");
     initLed();
     lightLed("green");
-    initSettings(versionStr, initialDataStr);
+    initSettings(readmeStr, initialDataStr);
     ESP_LOGI(TAG, "after initSettings");
     enterSettingsMode();
     ESP_LOGI(TAG, "after enterSettingsMode");

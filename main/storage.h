@@ -22,9 +22,6 @@ static uint8_t buf[CONFIG_TINYUSB_CDC_RX_BUFSIZE + 1];
 const char *directory = "/usb/esp";
 const char *file_path = "/usb/esp/settings.txt";
 
-const char *file_path_version = "/usb/esp/version.txt";
-
-static const char * readmeStr = "Reset Settings: Delete settings.txt and remove this USB from PC.";
 const char *file_path_readme = "/usb/esp/readme.txt";
 
 static const tusb_desc_device_t msc_device_descriptor = {
@@ -107,7 +104,7 @@ static void removeFiles(void){
 }
 
 
-void initSettings(char * version, char * initialDataStr){
+void initSettings(char * readmeStr, char * initialDataStr){
   wl_handle_t wl_handle = WL_INVALID_HANDLE;
   ESP_ERROR_CHECK(storage_init_spiflash(&wl_handle));
 
@@ -138,20 +135,8 @@ void initSettings(char * version, char * initialDataStr){
     }
   }
 
-  if (!exists(file_path_version)) {
-    FILE *f1 = fopen(file_path_version, "w");
-    if(f1){
-      // fprintf(f1, version);
-      fputs(version, f1);
-      // f_sync(fileno(f1));
-      fclose(f1);
-    }else{
-      ESP_LOGE(TAG, "Failed to open file for writing");
-    }
-  }
-
   if (!exists(file_path_readme)) {
-    FILE *f2 = fopen(file_path_version, "w");
+    FILE *f2 = fopen(file_path_readme, "w");
     if(f2){
       // fprintf(f2, readmeStr);
       fputs(readmeStr, f2);
