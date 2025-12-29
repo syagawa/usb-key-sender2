@@ -26,7 +26,7 @@ $ esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x6F0000
 
 idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Device Class (HID), setting TINYUSB_HID_COUNT to a value greater than 0 will enable TinyUSB HID.
 
-## build
+## build and settings
 
 1. Connect AtomS3U to PC
 2. Press reset button long
@@ -34,11 +34,27 @@ idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Devic
 4. Press reset button long
 5. Click build button (spanner icon) at VS Code extension.
 6. Remove AtomS3U from PC
-7. Connect AtomS3U to PC with pressing reset button
-8. Open and ddit settings.txt
+7. Connect AtomS3U to PC with pressing button
+8. Open and edit settings.txt
 9. Close settings.txt
 10. Unmount the USB device, wait about 10 seconds, and then unplug it.
 
+
+
+## usages
+
+### settings
+1. Connect AtomS3U to PC with pressing button
+2. Open and edit settings.txt
+3. Close settings.txt
+4. Unmount the USB device, wait about 10 seconds, and then unplug it.
+
+### input key
+1. Connect AtomS3U to PC
+2. Wait until the LED lights up in yellow and then turns off.
+3. Press button to input key to PC.
+
+---
 
 ## reset and build
 ```bash
@@ -46,13 +62,6 @@ $ idf.py -p /dev/ttyACM0 erase-flash
 $ idf.py fullclean
 $ idf.py build flash monitor
 ```
-
-## usage
-
-### settings
-
-1. connect usb to pc with button pressing
-2. led chaneg green to white
 
 
 ## flash size to 8MB
