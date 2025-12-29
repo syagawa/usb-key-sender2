@@ -1,0 +1,184 @@
+/*
+ * SPDX-FileCopyrightText: 2022-2023 Espressif Systems (Shanghai) CO LTD
+ *
+ * SPDX-License-Identifier: Unlicense OR CC0-1.0
+ */
+
+#include <errno.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include "esp_partition.h"
+#include "esp_check.h"
+#include "tinyusb.h"
+#include "tusb_msc_storage.h"
+#include "tusb_cdc_acm.h"
+
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
+#include "esp_log.h"
+#include "led_strip.h"
+#include "sdkconfig.h"
+
+// #include "iot_button.h"
+
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+// #include "jsmn.h"
+#include "cJSON.h"
+
+
+#define waitingMS 1000
+#define GPIOButtonNumber 41
+#define MaxLength 10
+char * defaultButtonColor = "red";
+char * buttonColor = "";
+
+
+#include "led.h"
+#include "keyboard.h"
+#include "button.h"
+#include "storage.h"
+// #include "app.h"
+
+const char * initialDataStr = "{\"settings_mode\": \"storage\", \"color\": \"red\", \"keys\": [\"sample1\", \"sample2\", \"example-111\"]}";
+const char * versionStr = "usb-key-sender-2.0.0";
+
+int keyIndex = 0;
+char *keys[MaxLength];
+int array_keys_count = 0;
+const char *colors[] = {"RED", "BLUE", "MAGENTA", "GREEN", "PINK", "YELLOW", "SKYBLUE", "BROWN", "PURPLE"};
+const int colorsLength = sizeof(colors) / sizeof(colors[0]);
+int colorIndex = -1;
+
+int pressedCount = 0;
+bool buttonIsLongPressed = false;
+TickType_t lastIncrementTime = 0;
+
+static void setIndex(int c) {
+  keyIndex = c;
+  if(keyIndex >= array_keys_count){
+    keyIndex = 0;
+    pressedCount = 0;
+    colorIndex = -1;
+  }else{
+    colorIndex = keyIndex % colorsLength;
+  }
+
+}
+
+static void startCount() {
+  buttonIsLongPressed = true;
+  lastIncrementTime = xTaskGetTickCount();
+  pressedCount++;
+  setIndex(pressedCount);
+}
+
+static void incrementCount(){
+  pressedCount++;
+  setIndex(pressedCount);
+}
+
+static void checkAndIncrementCount() {
+  TickType_t current = xTaskGetTickCount();
+  if ((current - lastIncrementTime) >= pdMS_TO_TICKS(waitingMS)){
+    incrementCount();
+    lastIncrementTime = xTaskGetTickCount();
+  }
+}
+
+static void checkAndSetColor() {
+
+  if(colorIndex == -1){
+    offLed();
+    return;
+  }
+
+  char *s = colors[colorIndex];
+  lightLed(s);
+}
+
+
+static void action1(void *arg,void *usr_data) {
+
+  char *str = keys[keyIndex];
+  usb_hid_print_string(str);
+
+  incrementCount();
+}
+
+static void action2(void *arg, void *data) {
+  buttonIsLongPressed = false;
+}
+
+static void action3(void *arg, void *data) {
+  ESP_LOGI(TAG, "button_long_cb %d", pressedCount);
+  startCount();
+}
+
+
+void enterSettingsMode(){
+  lightLed("WHITE");
+  startSettingsMode();
+}
+
+void enterMain(){
+
+  singleClickAction = action1;
+  pressUpAction = action2;
+  longPressedAction = action3;
+
+
+  initSettings(versionStr, initialDataStr);
+
+  cJSON *json_arr = getSettingArrayAsJSONByKey("keys");
+  if (cJSON_IsArray(json_arr)) {
+  
+    int size = cJSON_GetArraySize(json_arr);
+    for (int i = 0; i < size && i < MaxLength; i++) {
+      cJSON *item = cJSON_GetArrayItem(json_arr, i);
+      if (cJSON_IsString(item)) {
+        keys[array_keys_count] = strdup(item->valuestring);
+        array_keys_count++;
+      }
+    }
+  }
+
+  while(1){
+    if(buttonIsLongPressed){
+      checkAndIncrementCount();
+    }
+    checkAndSetColor();
+
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
+
+void app_main(void){
+
+  esp_reset_reason_t reason = esp_reset_reason();
+
+  if(reason == 3){
+    ESP_LOGI(TAG, "restarted esp");
+    initLed();
+    lightLed("green");
+    initSettings(versionStr, initialDataStr);
+    ESP_LOGI(TAG, "after initSettings");
+    enterSettingsMode();
+    ESP_LOGI(TAG, "after enterSettingsMode");
+    // settings mode
+  }else{
+    if(isButtonPressed()){
+      ESP_LOGI(TAG, "pressed1");
+      esp_restart();
+    }else{
+      initButtonForKeyboard();
+      initLed();
+      ESP_LOGI(TAG, "normal");
+      enterMain();
+    }
+  }
+}
