@@ -26,6 +26,7 @@ idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Devic
 
 ### initial build
 1. long press reset button
+2. idf.py erase-flash
 2. click build button (spanner icon) at extension.
 3. remove usb and connect
 4. long press reset button
