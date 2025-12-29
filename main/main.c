@@ -145,6 +145,9 @@ void enterMain(){
       }
     }
   }
+  lightLed("yellow");
+  vTaskDelay(pdMS_TO_TICKS(1000));
+  offLed();
 
   while(1){
     if(buttonIsLongPressed){
