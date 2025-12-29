@@ -81,10 +81,9 @@ void tinyusb_cdc_line_state_changed_callback(int itf, cdcacm_event_t *event)
   ESP_LOGI(TAG, "Line state changed on channel %d: DTR:%d, RTS:%d", itf, dtr, rts);
 }
 
-static bool file_exists(const char *file_path)
-{
+static bool exists(const char *path) {
   struct stat buffer;
-  return stat(file_path, &buffer) == 0;
+  return stat(path, &buffer) == 0;
 }
 
 
@@ -119,35 +118,51 @@ void initSettings(char * version, char * initialDataStr){
   ESP_ERROR_CHECK(tinyusb_msc_storage_mount(BASE_PATH));
   
   struct stat s = {0};
-  bool directory_exists = stat(directory, &s) == 0;
-  if (!directory_exists) {
+  if(!exists(directory)){
     if (mkdir(directory, 0775) != 0) {
       ESP_LOGE(TAG, "mkdir failed with errno: %s", strerror(errno));
+    }else{
+      ESP_LOGE(TAG, "directory created: %s", directory);
     }
   }
 
-  if (!file_exists(file_path)) {
+  if (!exists(file_path)) {
     FILE *f = fopen(file_path, "w");
-    if (f == NULL) {
+    if(f){
+      // fprintf(f, initialDataStr);
+      fputs(initialDataStr, f);
+      fsync(fileno(f));
+      fclose(f);
+    }else{
       ESP_LOGE(TAG, "Failed to open file for writing");
     }
-    fprintf(f, initialDataStr);
-    fclose(f);
   }
 
-  FILE *f1 = fopen(file_path_version, "w");
-  if (f1 == NULL) {
-    ESP_LOGE(TAG, "Failed to open file for writing");
+  if (!exists(file_path_version)) {
+    FILE *f1 = fopen(file_path_version, "w");
+    if(f1){
+      // fprintf(f1, version);
+      fputs(version, f1);
+      fsync(fileno(f1));
+      fclose(f1);
+    }else{
+      ESP_LOGE(TAG, "Failed to open file for writing");
+    }
   }
-  fprintf(f1, version);
-  fclose(f1);
 
-  FILE *f2 = fopen(file_path_readme, "w");
-  if (f2 == NULL) {
-    ESP_LOGE(TAG, "Failed to open file for writing");
+  if (!exists(file_path_readme)) {
+    FILE *f2 = fopen(file_path_version, "w");
+    if(f2){
+      // fprintf(f2, readmeStr);
+      fputs(readmeStr, f2);
+      fsync(fileno(f2));
+      fclose(f2);
+    }else{
+      ESP_LOGE(TAG, "Failed to open file for writing");
+    }
   }
-  fprintf(f2, readmeStr);
-  fclose(f2);
+
+
 }
 
 cJSON * getSettings(){
