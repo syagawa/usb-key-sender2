@@ -123,6 +123,19 @@ static void action3(void *arg, void *data) {
 void enterSettingsMode(){
   lightLed("WHITE");
   startSettingsMode();
+  tud_init(0);
+  uint8_t last = 0;
+  wihle(1){
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    uint8_t now = tud_ready();
+    if (now != last) {
+      if (!(last = now)) {
+        lightLed("purple");
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        offLed();
+      }
+    }
+  }
 }
 
 void enterMain(){
