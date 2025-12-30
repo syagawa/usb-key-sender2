@@ -201,27 +201,79 @@ static void ascii_to_hid_with_modifier(char c, uint8_t *keycode, uint8_t *modifi
   }
 }
 
+static void send_hid_report_and_wait(uint8_t modifier, uint8_t keycode) {
+  if (keycode == 0 && modifier == 0) return;
+
+  uint8_t key_report[6] = {keycode, 0, 0, 0, 0, 0};
+  uint8_t empty_report[6] = {0, 0, 0, 0, 0, 0};
+
+  tud_hid_keyboard_report(REPORT_ID_KEYBOARD, modifier, key_report);
+  vTaskDelay(pdMS_TO_TICKS(20));
+
+  while (!tud_hid_ready()) {
+    vTaskDelay(pdMS_TO_TICKS(1));
+  }
+
+  tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, empty_report);
+  vTaskDelay(pdMS_TO_TICKS(20));
+  while (!tud_hid_ready()) {
+    vTaskDelay(pdMS_TO_TICKS(1));
+  }
+}
+
 
 void usb_hid_print_string(const char *str) {
   for (int i = 0; str[i] != '\0'; i++) {
-    ESP_LOGI(TAG_KEYBOARD, "in usb_hid_print_string1");
     uint8_t keycode = 0;
     uint8_t modifier = 0;
     ascii_to_hid_with_modifier(str[i], &keycode, &modifier);
     if (keycode != 0) {
-      uint8_t key_report[6] = {keycode, 0, 0, 0, 0, 0};
-      uint8_t empty_report[6] = {0, 0, 0, 0, 0, 0};
-      // キーを押す
-      tud_hid_keyboard_report(REPORT_ID_KEYBOARD, modifier, key_report);
-      vTaskDelay(pdMS_TO_TICKS(20));
-
-      while (!tud_hid_ready()) {
-        vTaskDelay(pdMS_TO_TICKS(1));
-      }
-
-      // キーを離す
-      tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, empty_report);
-      vTaskDelay(pdMS_TO_TICKS(20));
+      send_hid_report_and_wait(modifier, keycode);
     }
+  }
+}
+
+
+// [
+//   "notepad", 
+//   {"key": "ENTER"},
+//   "Hello World",
+//   {"mod": "L_CTRL", "key": "s"}
+// ]
+
+void executeAction(cJSON **keys, int index) {
+  if (keys == NULL || keys[index] == NULL) {
+    return;
+  }
+  cJSON *item = keys[index];
+  if (cJSON_IsString(item)) {
+    usb_hid_print_string(item->valuestring);
+  } else if (cJSON_IsObject(item)) {
+    uint8_t keycode = 0, modifier = 0;
+    cJSON *k_obj = cJSON_GetObjectItemCaseSensitive(item, "key");
+    cJSON *m_obj = cJSON_GetObjectItemCaseSensitive(item, "mod");
+
+    // 修飾キーの解析
+    if (cJSON_IsString(m_obj)) {
+      const char *m = m_obj->valuestring;
+      if      (strcmp(m, "CTRL")  == 0) modifier = KEYBOARD_MODIFIER_LEFTCTRL;
+      else if (strcmp(m, "SHIFT") == 0) modifier = KEYBOARD_MODIFIER_LEFTSHIFT;
+      else if (strcmp(m, "ALT") == 0)   modifier = KEYBOARD_MODIFIER_LEFTALT;
+      else if (strcmp(m, "GUI") == 0)   modifier = KEYBOARD_MODIFIER_LEFTGUI;
+    }
+
+    // キーコードの解析
+    if (cJSON_IsString(k_obj)) {
+      const char *k = k_obj->valuestring;
+      if      (strcmp(k, "ENTER") == 0) keycode = HID_KEY_ENTER;
+      else if (strcmp(k, "TAB")   == 0) keycode = HID_KEY_TAB;
+      else if (strlen(k) == 1) {
+          uint8_t dummy_mod;
+          ascii_to_hid_with_modifier(k[0], &keycode, &dummy_mod);
+      }
+    }
+
+    // 共通関数を呼び出し
+    send_hid_report_and_wait(modifier, keycode);
   }
 }

@@ -48,7 +48,8 @@ const char * initialDataStr = "{\"settings_mode\": \"storage\", \"color\": \"red
 static const char * readmeStr = "usb-key-sender-2.0.0\nReset Settings: Delete settings.txt and remove this USB from PC.";
 
 int keyIndex = 0;
-char *keys[MaxLength];
+// char *keys[MaxLength];
+cJSON *keys[MaxLength];
 int array_keys_count = 0;
 const char *colors[] = {"RED", "BLUE", "MAGENTA", "GREEN", "PINK", "YELLOW", "SKYBLUE", "BROWN", "PURPLE"};
 const int colorsLength = sizeof(colors) / sizeof(colors[0]);
@@ -102,10 +103,13 @@ static void checkAndSetColor() {
 }
 
 
+
+
 static void action1(void *arg,void *usr_data) {
 
-  char *str = keys[keyIndex];
-  usb_hid_print_string(str);
+  // char *str = keys[keyIndex];
+  // usb_hid_print_string(str);
+  executeAction(keys, keyIndex);
 
   incrementCount();
 }
@@ -143,17 +147,28 @@ void enterMain(){
   initSettings(readmeStr, initialDataStr);
 
   cJSON *json_arr = getSettingArrayAsJSONByKey("keys");
-  if (cJSON_IsArray(json_arr)) {
-  
+  // if (cJSON_IsArray(json_arr)) {
+  //   int size = cJSON_GetArraySize(json_arr);
+  //   for (int i = 0; i < size && i < MaxLength; i++) {
+  //     cJSON *item = cJSON_GetArrayItem(json_arr, i);
+  //     if (cJSON_IsString(item)) {
+  //       keys[array_keys_count] = strdup(item->valuestring);
+  //       array_keys_count++;
+  //     }
+  //   }
+  // }
+
+  if (cJSON_IsArray(json_arr)){
     int size = cJSON_GetArraySize(json_arr);
     for (int i = 0; i < size && i < MaxLength; i++) {
       cJSON *item = cJSON_GetArrayItem(json_arr, i);
-      if (cJSON_IsString(item)) {
-        keys[array_keys_count] = strdup(item->valuestring);
-        array_keys_count++;
-      }
+      keys[array_keys_count] = cJSON_Duplicate(item, true);
+      array_keys_count++;
     }
+    cJSON_Delete(json_arr);
   }
+
+
   lightLed("yellow");
   vTaskDelay(pdMS_TO_TICKS(500));
   offLed();
