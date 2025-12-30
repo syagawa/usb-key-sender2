@@ -125,7 +125,7 @@ void enterSettingsMode(){
   startSettingsMode();
   tud_init(0);
   uint8_t last = 0;
-  wihle(1){
+  while(1){
     vTaskDelay(pdMS_TO_TICKS(1000));
     uint8_t now = tud_ready();
     if (now != last) {
