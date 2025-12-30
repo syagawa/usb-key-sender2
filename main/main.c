@@ -123,17 +123,13 @@ static void action3(void *arg, void *data) {
 void enterSettingsMode(){
   lightLed("WHITE");
   startSettingsMode();
-  tud_init(0);
-  uint8_t last = 0;
   while(1){
-    vTaskDelay(pdMS_TO_TICKS(1000));
-    uint8_t now = tud_ready();
-    if (now != last) {
-      if (!(last = now)) {
-        lightLed("purple");
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        offLed();
-      }
+    vTaskDelay(pdMS_TO_TICKS(500));
+    // this code is untested and kept for reference
+    if(!tud_mounted() || tud_suspended()){
+      lightLed("red");
+      vTaskDelay(pdMS_TO_TICKS(500));
+      offLed();
     }
   }
 }
@@ -159,7 +155,7 @@ void enterMain(){
     }
   }
   lightLed("yellow");
-  vTaskDelay(pdMS_TO_TICKS(1000));
+  vTaskDelay(pdMS_TO_TICKS(500));
   offLed();
 
   while(1){
