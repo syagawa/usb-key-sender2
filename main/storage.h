@@ -4,14 +4,11 @@
 // #include "tinyusb.h"
 // #include "tusb_msc_storage.h"
 // #include "tusb_cdc_acm.h"
-
 // #include "esp_log.h"
 // #include "sdkconfig.h"
-
 // #include <stdlib.h>
 // #include <time.h>
 // #include <string.h>
-
 // #include "cJSON.h"
 
 #define BASE_PATH "/usb" // base path to mount the partition
@@ -87,13 +84,11 @@ static bool exists(const char *path) {
 static esp_err_t storage_init_spiflash(wl_handle_t *wl_handle)
 {
   ESP_LOGI(TAG, "Initializing wear levelling");
-
   const esp_partition_t *data_partition = esp_partition_find_first(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_DATA_FAT, NULL);
   if (data_partition == NULL) {
     ESP_LOGE(TAG, "Failed to find FATFS partition. Check the partition table.");
     return ESP_ERR_NOT_FOUND;
   }
-
   return wl_mount(data_partition, wl_handle);
 }
 
@@ -107,26 +102,24 @@ static void removeFiles(void){
 void initSettings(char * readmeStr, char * initialDataStr){
   wl_handle_t wl_handle = WL_INVALID_HANDLE;
   ESP_ERROR_CHECK(storage_init_spiflash(&wl_handle));
-
   const tinyusb_msc_spiflash_config_t config_spi = {
-      .wl_handle = wl_handle
+    .wl_handle = wl_handle
   };
   ESP_ERROR_CHECK(tinyusb_msc_storage_init_spiflash(&config_spi));
   ESP_ERROR_CHECK(tinyusb_msc_storage_mount(BASE_PATH));
-  
+
   struct stat s = {0};
   if(!exists(directory)){
     if (mkdir(directory, 0775) != 0) {
       ESP_LOGE(TAG, "mkdir failed with errno: %s", strerror(errno));
     }else{
-      ESP_LOGE(TAG, "directory created: %s", directory);
+      ESP_LOGI(TAG, "directory created: %s", directory);
     }
   }
 
   if (!exists(file_path)) {
     FILE *f = fopen(file_path, "w");
     if(f){
-      // fprintf(f, initialDataStr);
       fputs(initialDataStr, f);
       // f_sync(fileno(f));
       fclose(f);
@@ -138,7 +131,6 @@ void initSettings(char * readmeStr, char * initialDataStr){
   if (!exists(file_path_readme)) {
     FILE *f2 = fopen(file_path_readme, "w");
     if(f2){
-      // fprintf(f2, readmeStr);
       fputs(readmeStr, f2);
       // f_sync(fileno(f2));
       fclose(f2);
@@ -146,8 +138,6 @@ void initSettings(char * readmeStr, char * initialDataStr){
       ESP_LOGE(TAG, "Failed to open file for writing");
     }
   }
-
-
 }
 
 cJSON * getSettings(){
@@ -179,7 +169,6 @@ cJSON * getSettings(){
   free(str);
 
   return obj;
-
 }
 
 char * getSettingByKey(char * targetkey){
@@ -200,14 +189,10 @@ char * getSettingByKey(char * targetkey){
       }
       currentItem = currentItem->next;
     }
-
     cJSON *target_elm = cJSON_GetObjectItemCaseSensitive(obj, targetkey);
-
-
     if(target_elm){
       value = target_elm->valuestring;
     }
-
   }
 
   return value;
@@ -216,9 +201,8 @@ char * getSettingByKey(char * targetkey){
 cJSON * getSettingArrayAsJSONByKey(char * targetkey) {
   cJSON * obj = getSettings();
   if (obj == NULL) return NULL;
-
   cJSON *target_elm = cJSON_GetObjectItemCaseSensitive(obj, targetkey);
-  
+
   cJSON *result = NULL;
   if (cJSON_IsArray(target_elm)) {
     result = cJSON_Duplicate(target_elm, true);
@@ -245,20 +229,16 @@ void startSettingsMode(){
       }
       currentItem = currentItem->next;
     }
-
     cJSON *settings_mode_elm = cJSON_GetObjectItemCaseSensitive(obj, "settings_mode");
-
     if(settings_mode_elm){
       settings_mode = settings_mode_elm->valuestring;
     }
-
   }
 
   ESP_LOGI(TAG, "Settings Mode is %s\n", settings_mode);
-  
+
   if(strcmp("storage", settings_mode) == 0){
     showColorWithBrightness("white", 0.1);
-
     ESP_LOGI(TAG, "USB Composite initialization");
     const tinyusb_config_t tusb_cfg = {
       .device_descriptor = &msc_device_descriptor,
@@ -287,7 +267,6 @@ void startSettingsMode(){
                         &tinyusb_cdc_line_state_changed_callback));
 
     ESP_LOGI(TAG, "USB Composite initialization DONE");
-
   }
 
   cJSON_Delete(obj);
