@@ -234,6 +234,214 @@ void usb_hid_print_string(const char *str) {
 }
 
 
+
+uint8_t getHidKeycodeFromStr(const char *str) {
+  if(str == NULL) {
+    return 0;
+  }
+
+  if(strcmp(str, "ENTER") == 0){
+    return HID_KEY_ENTER;
+  }else if(strcmp(str, "ESCAPE") == 0){
+    return HID_KEY_ESCAPE;
+  }else if(strcmp(str, "BACKSPACE") == 0){
+    return HID_KEY_BACKSPACE;
+  }else if(strcmp(str, "TAB") == 0){
+    return HID_KEY_TAB;
+  }else if(strcmp(str, "SPACE") == 0){
+    return HID_KEY_SPACE;
+  }else if(strcmp(str, "MINUS") == 0){
+    return HID_KEY_MINUS;
+  }else if(strcmp(str, "EQUAL") == 0){
+    return HID_KEY_EQUAL;
+  }else if(strcmp(str, "BRACKET_LEFT") == 0){
+    return HID_KEY_BRACKET_LEFT;
+  }else if(strcmp(str, "BRACKET_RIGHT") == 0){
+    return HID_KEY_BRACKET_RIGHT;
+  }else if(strcmp(str, "BACKSLASH") == 0){
+    return HID_KEY_BACKSLASH;
+  }else if(strcmp(str, "EUROPE_1") == 0){
+    return HID_KEY_EUROPE_1;
+  }else if(strcmp(str, "SEMICOLON") == 0){
+    return HID_KEY_SEMICOLON;
+  }else if(strcmp(str, "APOSTROPHE") == 0){
+    return HID_KEY_APOSTROPHE;
+  }else if(strcmp(str, "GRAVE") == 0){
+    return HID_KEY_GRAVE;
+  }else if(strcmp(str, "COMMA") == 0){
+    return HID_KEY_COMMA;
+  }else if(strcmp(str, "PERIOD") == 0){
+    return HID_KEY_PERIOD;
+  }else if(strcmp(str, "SLASH") == 0){
+    return HID_KEY_SLASH;
+  }else if(strcmp(str, "CAPS_LOCK") == 0){
+    return HID_KEY_CAPS_LOCK;
+  }else if(strcmp(str, "F1") == 0){
+    return HID_KEY_F1;
+  }else if(strcmp(str, "F2") == 0){
+    return HID_KEY_F2;
+  }else if(strcmp(str, "F3") == 0){
+    return HID_KEY_F3;
+  }else if(strcmp(str, "F4") == 0){
+    return HID_KEY_F4;
+  }else if(strcmp(str, "F5") == 0){
+    return HID_KEY_F5;
+  }else if(strcmp(str, "F6") == 0){
+    return HID_KEY_F6;
+  }else if(strcmp(str, "F7") == 0){
+    return HID_KEY_F7;
+  }else if(strcmp(str, "F8") == 0){
+    return HID_KEY_F8;
+  }else if(strcmp(str, "F9") == 0){
+    return HID_KEY_F9;
+  }else if(strcmp(str, "F10") == 0){
+    return HID_KEY_F10;
+  }else if(strcmp(str, "F11") == 0){
+    return HID_KEY_F11;
+  }else if(strcmp(str, "F12") == 0){
+    return HID_KEY_F12;
+  }else if(strcmp(str, "PRINT_SCREEN") == 0){
+    return HID_KEY_PRINT_SCREEN;
+  }else if(strcmp(str, "SCROLL_LOCK") == 0){
+    return HID_KEY_SCROLL_LOCK;
+  }else if(strcmp(str, "PAUSE") == 0){
+    return HID_KEY_PAUSE;
+  }else if(strcmp(str, "INSERT") == 0){
+    return HID_KEY_INSERT;
+  }else if(strcmp(str, "HOME") == 0){
+    return HID_KEY_HOME;
+  }else if(strcmp(str, "PAGE_UP") == 0){
+    return HID_KEY_PAGE_UP;
+  }else if(strcmp(str, "DELETE") == 0){
+    return HID_KEY_DELETE;
+  }else if(strcmp(str, "END") == 0){
+    return HID_KEY_END;
+  }else if(strcmp(str, "PAGE_DOWN") == 0){
+    return HID_KEY_PAGE_DOWN;
+  }else if(strcmp(str, "ARROW_RIGHT") == 0){
+    return HID_KEY_ARROW_RIGHT;
+  }else if(strcmp(str, "ARROW_LEFT") == 0){
+    return HID_KEY_ARROW_LEFT;
+  }else if(strcmp(str, "ARROW_DOWN") == 0){
+    return HID_KEY_ARROW_DOWN;
+  }else if(strcmp(str, "ARROW_UP") == 0){
+    return HID_KEY_ARROW_UP;
+  }else if(strcmp(str, "NUM_LOCK") == 0){
+    return HID_KEY_NUM_LOCK;
+  }else if(strcmp(str, "KEYPAD_DIVIDE") == 0){
+    return HID_KEY_KEYPAD_DIVIDE;
+  }else if(strcmp(str, "KEYPAD_MULTIPLY") == 0){
+    return HID_KEY_KEYPAD_MULTIPLY;
+  }else if(strcmp(str, "KEYPAD_SUBTRACT") == 0){
+    return HID_KEY_KEYPAD_SUBTRACT;
+  }else if(strcmp(str, "KEYPAD_ADD") == 0){
+    return HID_KEY_KEYPAD_ADD;
+  }else if(strcmp(str, "KEYPAD_ENTER") == 0){
+    return HID_KEY_KEYPAD_ENTER;
+  }else if(strcmp(str, "KEYPAD_1") == 0){
+    return HID_KEY_KEYPAD_1;
+  }else if(strcmp(str, "KEYPAD_2") == 0){
+    return HID_KEY_KEYPAD_2;
+  }else if(strcmp(str, "KEYPAD_3") == 0){
+    return HID_KEY_KEYPAD_3;
+  }else if(strcmp(str, "KEYPAD_4") == 0){
+    return HID_KEY_KEYPAD_4;
+  }else if(strcmp(str, "KEYPAD_5") == 0){
+    return HID_KEY_KEYPAD_5;
+  }else if(strcmp(str, "KEYPAD_6") == 0){
+    return HID_KEY_KEYPAD_6;
+  }else if(strcmp(str, "KEYPAD_7") == 0){
+    return HID_KEY_KEYPAD_7;
+  }else if(strcmp(str, "KEYPAD_8") == 0){
+    return HID_KEY_KEYPAD_8;
+  }else if(strcmp(str, "KEYPAD_9") == 0){
+    return HID_KEY_KEYPAD_9;
+  }else if(strcmp(str, "KEYPAD_0") == 0){
+    return HID_KEY_KEYPAD_0;
+  }else if(strcmp(str, "KEYPAD_DECIMAL") == 0){
+    return HID_KEY_KEYPAD_DECIMAL;
+  }else if(strcmp(str, "EUROPE_2") == 0){
+    return HID_KEY_EUROPE_2;
+  }else if(strcmp(str, "APPLICATION") == 0){
+    return HID_KEY_APPLICATION;
+  }else if(strcmp(str, "POWER") == 0){
+    return HID_KEY_POWER;
+  }else if(strcmp(str, "KEYPAD_EQUAL") == 0){
+    return HID_KEY_KEYPAD_EQUAL;
+  }else if(strcmp(str, "F13") == 0){
+    return HID_KEY_F13;
+  }else if(strcmp(str, "F14") == 0){
+    return HID_KEY_F14;
+  }else if(strcmp(str, "F15") == 0){
+    return HID_KEY_F15;
+  }else if(strcmp(str, "F16") == 0){
+    return HID_KEY_F16;
+  }else if(strcmp(str, "F17") == 0){
+    return HID_KEY_F17;
+  }else if(strcmp(str, "F18") == 0){
+    return HID_KEY_F18;
+  }else if(strcmp(str, "F19") == 0){
+    return HID_KEY_F19;
+  }else if(strcmp(str, "F20") == 0){
+    return HID_KEY_F20;
+  }else if(strcmp(str, "F21") == 0){
+    return HID_KEY_F21;
+  }else if(strcmp(str, "F22") == 0){
+    return HID_KEY_F22;
+  }else if(strcmp(str, "F23") == 0){
+    return HID_KEY_F23;
+  }else if(strcmp(str, "F24") == 0){
+    return HID_KEY_F24;
+  }else if(strcmp(str, "EXECUTE") == 0){
+    return HID_KEY_EXECUTE;
+  }else if(strcmp(str, "HELP") == 0){
+    return HID_KEY_HELP;
+  }else if(strcmp(str, "MENU") == 0){
+    return HID_KEY_MENU;
+  }else if(strcmp(str, "SELECT") == 0){
+    return HID_KEY_SELECT;
+  }else if(strcmp(str, "STOP") == 0){
+    return HID_KEY_STOP;
+  }else if(strcmp(str, "AGAIN") == 0){
+    return HID_KEY_AGAIN;
+  }else if(strcmp(str, "UNDO") == 0){
+    return HID_KEY_UNDO;
+  }else if(strcmp(str, "CUT") == 0){
+    return HID_KEY_CUT;
+  }else if(strcmp(str, "COPY") == 0){
+    return HID_KEY_COPY;
+  }else if(strcmp(str, "PASTE") == 0){
+    return HID_KEY_PASTE;
+  }else if(strcmp(str, "FIND") == 0){
+    return HID_KEY_FIND;
+  }else if(strcmp(str, "MUTE") == 0){
+    return HID_KEY_MUTE;
+  }else if(strcmp(str, "VOLUME_UP") == 0){
+    return HID_KEY_VOLUME_UP;
+  }else if(strcmp(str, "VOLUME_DOWN") == 0){
+    return HID_KEY_VOLUME_DOWN;
+  }else if(strcmp(str, "LOCKING_CAPS_LOCK") == 0){
+    return HID_KEY_LOCKING_CAPS_LOCK;
+  }else if(strcmp(str, "LOCKING_NUM_LOCK") == 0){
+    return HID_KEY_LOCKING_NUM_LOCK;
+  }else if(strcmp(str, "LOCKING_SCROLL_LOCK") == 0){
+    return HID_KEY_LOCKING_SCROLL_LOCK;
+  }else if(strcmp(str, "KEYPAD_COMMA") == 0){
+    return HID_KEY_KEYPAD_COMMA;
+  }else if(strcmp(str, "KEYPAD_EQUAL_SIGN") == 0){
+    return HID_KEY_KEYPAD_EQUAL_SIGN;
+  }
+
+  if (strlen(str) == 1) {
+    uint8_t keycode = 0;
+    uint8_t dummy_mod;
+    ascii_to_hid_with_modifier(str[0], &keycode, &dummy_mod);
+    return keycode;
+  }
+
+  return 0;
+}
+
 // [
 //   "notepad", 
 //   {"key": "ENTER"},
@@ -265,12 +473,7 @@ void executeAction(cJSON **keys, int index) {
     // キーコードの解析
     if (cJSON_IsString(k_obj)) {
       const char *k = k_obj->valuestring;
-      if      (strcmp(k, "ENTER") == 0) keycode = HID_KEY_ENTER;
-      else if (strcmp(k, "TAB")   == 0) keycode = HID_KEY_TAB;
-      else if (strlen(k) == 1) {
-          uint8_t dummy_mod;
-          ascii_to_hid_with_modifier(k[0], &keycode, &dummy_mod);
-      }
+      keycode = getHidKeycodeFromStr(k);
     }
 
     // 共通関数を呼び出し
