@@ -125,16 +125,22 @@ static void action3(void *arg, void *data) {
 
 
 void enterSettingsMode(){
-  lightLed("WHITE");
+  lightLed("white");
   startSettingsMode();
   while(1){
     vTaskDelay(pdMS_TO_TICKS(500));
-    // this code is untested and kept for reference
-    if(!tud_mounted() || tud_suspended()){
-      lightLed("red");
+
+    // for windows
+    if(!tud_mounted()){
+      lightLed("greenyellow");
+      vTaskDelay(pdMS_TO_TICKS(500));
+      offLed();
+    }else if(tud_suspended()){
+      lightLed("cyan");
       vTaskDelay(pdMS_TO_TICKS(500));
       offLed();
     }
+
   }
 }
 
@@ -154,19 +160,26 @@ void enterMain(){
       cJSON *item = cJSON_GetArrayItem(json_arr, i);
       cJSON *dup = cJSON_Duplicate(item, true);
       if(dup == NULL){
-        parseError = 1;
+        parseError = 2;
         break;
       }
       keys[array_keys_count] = dup;
       array_keys_count++;
     }
     cJSON_Delete(json_arr);
+  }else{
+    parseError = 1;
   }
 
-  if(parseError == 1){
-    lightLed("red");
+  if(parseError > 0){
+    for(int i = 0; i < parseError; i++){
+      lightLed("red");
+      vTaskDelay(pdMS_TO_TICKS(400));
+      offLed();
+      vTaskDelay(pdMS_TO_TICKS(100));
+    }
   }else{
-    lightLed("yellow");
+    lightLed("green");
   }
 
   vTaskDelay(pdMS_TO_TICKS(500));

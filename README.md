@@ -51,7 +51,7 @@ idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Devic
 
 ### input key
 1. Connect AtomS3U to PC
-2. Wait until the LED lights up in yellow and then turns off.
+2. Wait until the LED lights up in green and then turns off.(If it blinks red, it indicates an error. Please check `settings.txt`.)
 3. Press button to input key to PC.
 
 ---
