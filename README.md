@@ -54,6 +54,74 @@ idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Devic
 2. Wait until the LED lights up in green and then turns off.(If it blinks red, it indicates an error. Please check `settings.txt`.)
 3. Press button to input key to PC.
 
+
+## JSON examples
+
+* Notepad (Windows)
+```json
+{
+  "keys": [
+    {"mod": "GUI", "key": "r"},
+    "notepad",
+    {"key": "ENTER"},
+    "Hello! This is an auto-typed message.",
+    {"mod": "CTRL", "key": "a"},
+    {"mod": "CTRL", "key": "x"},
+    "This is the pasted text: ",
+    {"mod": "CTRL", "key": "v"},
+    {"key": "ENTER"},
+    "Have a good one!"
+  ]
+}
+```
+
+* Browser (Windows)
+```json
+{
+  "keys": [
+    {"mod": "GUI", "key": "r"},
+    "https://gemini.google.com/",
+    {"key": "ENTER"},
+    "What is the meaning of 42?",
+    {"key": "ENTER"}
+  ]
+}
+```
+
+* ipconfig (Windows)
+```json
+{
+  "keys": [
+    {"mod": "GUI", "key": "r"},
+    "cmd",
+    {"key": "ENTER"},
+    "ipconfig",
+    {"key": "ENTER"}
+  ]
+}
+```
+* Excel: Copy and paste to the line below
+```json
+{
+  "keys": [
+    {"mod": "CTRL", "key": "c"},
+    {"key": "ARROW_DOWN"},
+    {"mod": "CTRL", "key": "v"},
+    {"key": "ENTER"}
+  ]
+}
+```
+
+* tail (linux)
+```json
+{
+  "keys": [
+    "tail -f /var/log/syslog",
+    {"key": "ENTER"}
+  ]
+}
+```
+
 ---
 
 ## reset and build

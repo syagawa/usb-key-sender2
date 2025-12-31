@@ -34,8 +34,6 @@
 #define waitingMS 1000
 #define GPIOButtonNumber 41
 #define MaxLength 10
-char * defaultButtonColor = "red";
-char * buttonColor = "";
 
 
 #include "led.h"
@@ -43,7 +41,7 @@ char * buttonColor = "";
 #include "button.h"
 #include "storage.h"
 
-const char * initialDataStr = "{\"color\": \"red\", \"keys\": [\"sample1\", \"sample2\", \"example-111\"]}";
+const char * initialDataStr = "{\"keys\": [\"sample\", \"sample2\", \"example-111\"]}";
 static const char * readmeStr = "usb-key-sender-"VERSION"\nReset Settings: Delete settings.txt and remove this USB from PC.";
 
 int keyIndex = 0;

@@ -3,6 +3,8 @@
 #include "iot_button.h"
 #include "storage.h"
 
+char * defaultButtonColor = "red";
+char * buttonColor = "";
 
 void (*singleClickAction)(void);
 void (*pressUpAction)(void);
