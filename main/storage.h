@@ -141,6 +141,37 @@ void initSettings(char * readmeStr, char * initialDataStr){
   }
 }
 
+// cJSON * getSettings(){
+//   FILE *f;
+//   ESP_LOGI(TAG, "Reading file");
+//   f = fopen(file_path, "r");
+//   if (f == NULL) {
+//     ESP_LOGE(TAG, "Failed to open file for reading");
+//     return NULL;
+//   }
+
+//   char line[128];
+//   if(fgets(line, sizeof(line), f) == NULL){
+//     fclose(f);
+//     return NULL;
+//   }
+//   fclose(f);
+//   // strip newline
+//   char *pos = strchr(line, '\n');
+//   if (pos) {
+//       *pos = '\0';
+//   }
+//   ESP_LOGI(TAG, "Read from file: '%s'", line);
+
+//   char * str = strdup(line);
+
+//   ESP_LOGI(TAG, "json_str '%s'", str);
+//   cJSON * obj = cJSON_Parse(str);
+//   free(str);
+
+//   return obj;
+// }
+
 cJSON * getSettings(){
   FILE *f;
   ESP_LOGI(TAG, "Reading file");
@@ -150,27 +181,35 @@ cJSON * getSettings(){
     return NULL;
   }
 
-  char line[128];
-  if(fgets(line, sizeof(line), f) == NULL){
+  fseek(f, 0, SEEK_END);
+  long fsize = ftell(f);
+  fseek(f, 0, SEEK_SET);
+
+  char *data = (char *)malloc(fsize + 1);
+  if (data == NULL) {
+    ESP_LOGE(TAG, "Failed to allocate memory for JSON");
     fclose(f);
     return NULL;
   }
+
+  size_t read_size = fread(data, 1, fsize, f);
+  data[read_size] = '\0'; // 終端文字をセット
   fclose(f);
-  // strip newline
-  char *pos = strchr(line, '\n');
-  if (pos) {
-      *pos = '\0';
+
+  ESP_LOGI(TAG, "Read from file size: %d", (int)read_size);
+
+  cJSON * obj = cJSON_Parse(data);
+  if (obj == NULL) {
+    const char *error_ptr = cJSON_GetErrorPtr();
+    if (error_ptr != NULL) {
+      ESP_LOGE(TAG, "JSON Parse Error before: %s", error_ptr);
+    }
   }
-  ESP_LOGI(TAG, "Read from file: '%s'", line);
 
-  char * str = strdup(line);
-
-  ESP_LOGI(TAG, "json_str '%s'", str);
-  cJSON * obj = cJSON_Parse(str);
-  free(str);
-
+  free(data); // パースが終われば元の文字列は不要
   return obj;
 }
+
 
 char * getSettingByKey(char * targetkey){
   ESP_LOGI(TAG, "in getSettingByKey0");
