@@ -24,12 +24,13 @@ Docker
 2. Press reset button long
 3. `idf.py -p /dev/ttyACM0 erase-flash`
 4. Press reset button long
-5. Click build button (spanner icon) at VS Code extension.
-6. Remove AtomS3U from PC
-7. Connect AtomS3U to PC with pressing button (The following steps are required for the initial build)
-8. Open and edit settings.txt
-9. Close settings.txt
-10. Unmount the USB device, wait about 5 seconds, and then unplug it. (On Windows, when it is unmounted, the LED blinks blue or green. Then unplug it.)
+5. Click `Build Project` button (spanner icon) at VS Code extension.
+6. Click `Flash Device` button (thunder icon) at VS Code extension.
+7. Remove AtomS3U from PC
+8. Connect AtomS3U to PC with pressing button (The following steps are required for the initial build)
+9. Open and edit settings.txt
+10. Close settings.txt
+11. Unmount the USB device, wait about 5 seconds, and then unplug it. (On Windows, when it is unmounted, the LED blinks blue or green. Then unplug it.)
 
 
 
