@@ -37,7 +37,7 @@ idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Devic
 7. Connect AtomS3U to PC with pressing button (The following steps are required for the initial build)
 8. Open and edit settings.txt
 9. Close settings.txt
-10. Unmount the USB device, wait about 10 seconds, and then unplug it.
+10. Unmount the USB device, wait about 5 seconds, and then unplug it. (On Windows, when it is unmounted, the LED blinks blue or green. Then unplug it.)
 
 
 
