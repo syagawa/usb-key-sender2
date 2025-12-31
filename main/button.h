@@ -34,7 +34,6 @@ char * getButtonColor(){
 }
 
 bool isButtonPressed(void){
-  ESP_LOGI(TAG, "in isButtonPressed");
   return gpio_get_level(GPIOButtonNumber) == 0;
 }
 
@@ -48,7 +47,6 @@ static void initButtonForKeyboard(void) {
   };
   ESP_ERROR_CHECK(gpio_config(&boot_button_config));
 
-  ESP_LOGI(TAG, "USB initialization");
   const tinyusb_config_t tusb_cfg = {
     .device_descriptor = NULL,
     .string_descriptor = hid_string_descriptor,
@@ -58,7 +56,6 @@ static void initButtonForKeyboard(void) {
   };
 
   ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
-  ESP_LOGI(TAG, "USB initialization DONE");
 
   // create gpio button
   button_config_t gpio_btn_cfg = {

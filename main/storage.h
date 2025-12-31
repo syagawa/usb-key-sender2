@@ -57,7 +57,7 @@ void tinyusb_cdc_rx_callback(int itf, cdcacm_event_t *event)
   /* read */
   esp_err_t ret = tinyusb_cdcacm_read(itf, buf, CONFIG_TINYUSB_CDC_RX_BUFSIZE, &rx_size);
   if (ret == ESP_OK) {
-    ESP_LOGI(TAG, "Data from channel %d:", itf);
+    // ESP_LOGI(TAG, "Data from channel %d:", itf);
     ESP_LOG_BUFFER_HEXDUMP(TAG, buf, rx_size, ESP_LOG_INFO);
   } else {
     ESP_LOGE(TAG, "Read error");
@@ -72,8 +72,7 @@ void tinyusb_cdc_line_state_changed_callback(int itf, cdcacm_event_t *event)
 {
   int dtr = event->line_state_changed_data.dtr;
   int rts = event->line_state_changed_data.rts;
-  ESP_LOGI(TAG, "Line state changed on channel %d: DTR:%d, RTS:%d", itf, dtr, rts);
-
+  // ESP_LOGI(TAG, "Line state changed on channel %d: DTR:%d, RTS:%d", itf, dtr, rts);
 }
 
 static bool exists(const char *path) {
@@ -84,7 +83,7 @@ static bool exists(const char *path) {
 
 static esp_err_t storage_init_spiflash(wl_handle_t *wl_handle)
 {
-  ESP_LOGI(TAG, "Initializing wear levelling");
+  // ESP_LOGI(TAG, "Initializing wear levelling");
   const esp_partition_t *data_partition = esp_partition_find_first(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_DATA_FAT, NULL);
   if (data_partition == NULL) {
     ESP_LOGE(TAG, "Failed to find FATFS partition. Check the partition table.");
@@ -113,8 +112,6 @@ void initSettings(char * readmeStr, char * initialDataStr){
   if(!exists(directory)){
     if (mkdir(directory, 0775) != 0) {
       ESP_LOGE(TAG, "mkdir failed with errno: %s", strerror(errno));
-    }else{
-      ESP_LOGI(TAG, "directory created: %s", directory);
     }
   }
 
@@ -122,7 +119,6 @@ void initSettings(char * readmeStr, char * initialDataStr){
     FILE *f = fopen(file_path, "w");
     if(f){
       fputs(initialDataStr, f);
-      // f_sync(fileno(f));
       fclose(f);
     }else{
       ESP_LOGE(TAG, "Failed to open file for writing");
@@ -133,7 +129,6 @@ void initSettings(char * readmeStr, char * initialDataStr){
     FILE *f2 = fopen(file_path_readme, "w");
     if(f2){
       fputs(readmeStr, f2);
-      // f_sync(fileno(f2));
       fclose(f2);
     }else{
       ESP_LOGE(TAG, "Failed to open file for writing");
@@ -174,7 +169,7 @@ void initSettings(char * readmeStr, char * initialDataStr){
 
 cJSON * getSettings(){
   FILE *f;
-  ESP_LOGI(TAG, "Reading file");
+  // ESP_LOGI(TAG, "Reading file");
   f = fopen(file_path, "r");
   if (f == NULL) {
     ESP_LOGE(TAG, "Failed to open file for reading");
@@ -196,7 +191,7 @@ cJSON * getSettings(){
   data[read_size] = '\0'; // 終端文字をセット
   fclose(f);
 
-  ESP_LOGI(TAG, "Read from file size: %d", (int)read_size);
+  // ESP_LOGI(TAG, "Read from file size: %d", (int)read_size);
 
   cJSON * obj = cJSON_Parse(data);
   if (obj == NULL) {
@@ -212,9 +207,7 @@ cJSON * getSettings(){
 
 
 char * getSettingByKey(char * targetkey){
-  ESP_LOGI(TAG, "in getSettingByKey0");
   cJSON * obj = getSettings();
-  ESP_LOGI(TAG, "in getSettingByKey1");
   char * value = "";
   if(obj != NULL){
     // Iteratively check for existing keys
@@ -223,7 +216,7 @@ char * getSettingByKey(char * targetkey){
       const char *key = currentItem->string;
       cJSON *value = currentItem;
       if (cJSON_IsString(value) && (value->valuestring != NULL)) {
-        ESP_LOGI(TAG, "Key: %s, Value: %s\n", key, value->valuestring);
+        // ESP_LOGI(TAG, "Key: %s, Value: %s\n", key, value->valuestring);
       } else {
         ESP_LOGE(TAG, "Error getting value for key: %s\n", key);
       }
@@ -255,7 +248,6 @@ cJSON * getSettingArrayAsJSONByKey(char * targetkey) {
 void startSettingsMode(){
   cJSON * obj = getSettings();
 
-  char * settings_mode = "storage";
   if(obj != NULL){
     // Iteratively check for existing keys
     cJSON *currentItem = obj->child;
@@ -263,51 +255,43 @@ void startSettingsMode(){
       const char *key = currentItem->string;
       cJSON *value = currentItem;
       if (cJSON_IsString(value) && (value->valuestring != NULL)) {
-        ESP_LOGI(TAG, "Key: %s, Value: %s\n", key, value->valuestring);
+        // ESP_LOGI(TAG, "Key: %s, Value: %s\n", key, value->valuestring);
       } else {
         ESP_LOGE(TAG, "Error getting value for key: %s\n", key);
       }
       currentItem = currentItem->next;
     }
-    cJSON *settings_mode_elm = cJSON_GetObjectItemCaseSensitive(obj, "settings_mode");
-    if(settings_mode_elm){
-      settings_mode = settings_mode_elm->valuestring;
-    }
   }
 
-  ESP_LOGI(TAG, "Settings Mode is %s\n", settings_mode);
+  showColorWithBrightness("white", 0.1);
+  // ESP_LOGI(TAG, "USB Composite initialization");
+  const tinyusb_config_t tusb_cfg = {
+    .device_descriptor = &msc_device_descriptor,
+    .string_descriptor = NULL,
+    .string_descriptor_count = 0,
+    .external_phy = false,
+    .configuration_descriptor = msc_configuration_descriptor,
+  };
+  ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
 
-  if(strcmp("storage", settings_mode) == 0){
-    showColorWithBrightness("white", 0.1);
-    ESP_LOGI(TAG, "USB Composite initialization");
-    const tinyusb_config_t tusb_cfg = {
-      .device_descriptor = &msc_device_descriptor,
-      .string_descriptor = NULL,
-      .string_descriptor_count = 0,
-      .external_phy = false,
-      .configuration_descriptor = msc_configuration_descriptor,
-    };
-    ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
+  tinyusb_config_cdcacm_t acm_cfg = {
+    .usb_dev = TINYUSB_USBDEV_0,
+    .cdc_port = TINYUSB_CDC_ACM_0,
+    .rx_unread_buf_sz = 64,
+    .callback_rx = &tinyusb_cdc_rx_callback, // the first way to register a callback
+    .callback_rx_wanted_char = NULL,
+    .callback_line_state_changed = NULL,
+    .callback_line_coding_changed = NULL
+  };
 
-    tinyusb_config_cdcacm_t acm_cfg = {
-      .usb_dev = TINYUSB_USBDEV_0,
-      .cdc_port = TINYUSB_CDC_ACM_0,
-      .rx_unread_buf_sz = 64,
-      .callback_rx = &tinyusb_cdc_rx_callback, // the first way to register a callback
-      .callback_rx_wanted_char = NULL,
-      .callback_line_state_changed = NULL,
-      .callback_line_coding_changed = NULL
-    };
+  ESP_ERROR_CHECK(tusb_cdc_acm_init(&acm_cfg));
+  /* the second way to register a callback */
+  ESP_ERROR_CHECK(tinyusb_cdcacm_register_callback(
+                      TINYUSB_CDC_ACM_0,
+                      CDC_EVENT_LINE_STATE_CHANGED,
+                      &tinyusb_cdc_line_state_changed_callback));
 
-    ESP_ERROR_CHECK(tusb_cdc_acm_init(&acm_cfg));
-    /* the second way to register a callback */
-    ESP_ERROR_CHECK(tinyusb_cdcacm_register_callback(
-                        TINYUSB_CDC_ACM_0,
-                        CDC_EVENT_LINE_STATE_CHANGED,
-                        &tinyusb_cdc_line_state_changed_callback));
-
-    ESP_LOGI(TAG, "USB Composite initialization DONE");
-  }
+  // ESP_LOGI(TAG, "USB Composite initialization DONE");
 
   cJSON_Delete(obj);
 

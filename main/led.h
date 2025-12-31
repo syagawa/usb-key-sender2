@@ -84,13 +84,10 @@ static void offLed(){
 }
 
 static void initLed(void) {
-  ESP_LOGI(TAG_LED, "Example configured to blink addressable LED!");
-  /* LED strip initialization with the GPIO and pixels number*/
+  // ESP_LOGI(TAG_LED, "Example configured to blink addressable LED!");
   led_strip_config_t strip_config = {
     .strip_gpio_num = BLINK_GPIO,
     .max_leds = 1, // at least one LED on board
-    // .led_pixel_format = LED_PIXEL_FORMAT_GRB,
-    // .led_model = LED_MODEL_WS2812,
   };
 
   led_strip_rmt_config_t rmt_config = {

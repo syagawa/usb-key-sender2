@@ -30,7 +30,7 @@
 // #include "jsmn.h"
 #include "cJSON.h"
 
-
+#define VERSION "2.1.0"
 #define waitingMS 1000
 #define GPIOButtonNumber 41
 #define MaxLength 10
@@ -42,13 +42,11 @@ char * buttonColor = "";
 #include "keyboard.h"
 #include "button.h"
 #include "storage.h"
-// #include "app.h"
 
-const char * initialDataStr = "{\"settings_mode\": \"storage\", \"color\": \"red\", \"keys\": [\"sample1\", \"sample2\", \"example-111\"]}";
-static const char * readmeStr = "usb-key-sender-2.0.0\nReset Settings: Delete settings.txt and remove this USB from PC.";
+const char * initialDataStr = "{\"color\": \"red\", \"keys\": [\"sample1\", \"sample2\", \"example-111\"]}";
+static const char * readmeStr = "usb-key-sender-"VERSION"\nReset Settings: Delete settings.txt and remove this USB from PC.";
 
 int keyIndex = 0;
-// char *keys[MaxLength];
 cJSON *keys[MaxLength];
 int array_keys_count = 0;
 const char *colors[] = {"RED", "BLUE", "MAGENTA", "GREEN", "PINK", "YELLOW", "SKYBLUE", "BROWN", "PURPLE"};
@@ -119,7 +117,7 @@ static void action2(void *arg, void *data) {
 }
 
 static void action3(void *arg, void *data) {
-  ESP_LOGI(TAG, "button_long_cb %d", pressedCount);
+  // ESP_LOGI(TAG, "button_long_cb %d", pressedCount);
   startCount();
 }
 
@@ -200,22 +198,19 @@ void app_main(void){
   esp_reset_reason_t reason = esp_reset_reason();
 
   if(reason == 3){
-    ESP_LOGI(TAG, "restarted esp");
+    // ESP_LOGI(TAG, "restarted esp");
     initLed();
     lightLed("green");
     initSettings(readmeStr, initialDataStr);
-    ESP_LOGI(TAG, "after initSettings");
     enterSettingsMode();
-    ESP_LOGI(TAG, "after enterSettingsMode");
     // settings mode
   }else{
     if(isButtonPressed()){
-      ESP_LOGI(TAG, "pressed1");
       esp_restart();
     }else{
       initButtonForKeyboard();
       initLed();
-      ESP_LOGI(TAG, "normal");
+      // ESP_LOGI(TAG, "normal");
       enterMain();
     }
   }
