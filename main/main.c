@@ -146,30 +146,29 @@ void enterMain(){
 
   initSettings(readmeStr, initialDataStr);
 
+  int parseError = 0;
   cJSON *json_arr = getSettingArrayAsJSONByKey("keys");
-  // if (cJSON_IsArray(json_arr)) {
-  //   int size = cJSON_GetArraySize(json_arr);
-  //   for (int i = 0; i < size && i < MaxLength; i++) {
-  //     cJSON *item = cJSON_GetArrayItem(json_arr, i);
-  //     if (cJSON_IsString(item)) {
-  //       keys[array_keys_count] = strdup(item->valuestring);
-  //       array_keys_count++;
-  //     }
-  //   }
-  // }
-
   if (cJSON_IsArray(json_arr)){
     int size = cJSON_GetArraySize(json_arr);
     for (int i = 0; i < size && i < MaxLength; i++) {
       cJSON *item = cJSON_GetArrayItem(json_arr, i);
-      keys[array_keys_count] = cJSON_Duplicate(item, true);
+      cJSON *dup = cJSON_Duplicate(item, true);
+      if(dup == NULL){
+        parseError = 1;
+        break;
+      }
+      keys[array_keys_count] = dup;
       array_keys_count++;
     }
     cJSON_Delete(json_arr);
   }
 
+  if(parseError == 1){
+    lightLed("red");
+  }else{
+    lightLed("yellow");
+  }
 
-  lightLed("yellow");
   vTaskDelay(pdMS_TO_TICKS(500));
   offLed();
 
