@@ -1,6 +1,6 @@
 # USB Key Sender2
 
-## specs
+## Prerequisites
 
 * M5AtomS3U
 https://docs.m5stack.com/en/core/AtomS3U
@@ -9,22 +9,14 @@ https://docs.m5stack.com/en/core/AtomS3U
 VS code
 Docker
 
+## Instalation (VS Code Dev Container)
 
-## erase rom
-```bash
-# フラッシュロムのサイズを確認
-$ esptool.py --chip esp32s3 --port /dev/ttyACM0 flash_id
+1. Open the project folder in VS Code.
+2. When prompted, click "Reopen in Container" (or run Dev Containers: Reopen in Container from the Command Palette).
+3. Wait for the container to build. All tools and dependencies will be installed automatically.
 
-# storageの 2MB-3MBを削除
-$ esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x100000
 
-# storageの 2MB以降を削除
-$ esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x6F0000
-```
-
-## hid settings
-
-idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Device Class (HID), setting TINYUSB_HID_COUNT to a value greater than 0 will enable TinyUSB HID.
+* Using Local ESP-IDF: While not explicitly tested, the project follows the standard ESP-IDF structure. It should build and flash using idf.py commands in any environment where ESP-IDF is correctly installed.
 
 ## build and settings
 
@@ -123,6 +115,23 @@ idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Devic
 ```
 
 ---
+
+## erase rom
+```bash
+# check size of flash rom
+$ esptool.py --chip esp32s3 --port /dev/ttyACM0 flash_id
+
+# remove 2MB-3MB
+$ esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x100000
+
+# remove 2MB-
+$ esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x6F0000
+```
+
+## hid settings
+
+idf.py menuconfig under Component config > TinyUSB Stack > Human Interface Device Class (HID), setting TINYUSB_HID_COUNT to a value greater than 0 will enable TinyUSB HID.
+
 
 ## reset and build
 ```bash
