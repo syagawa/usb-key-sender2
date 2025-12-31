@@ -5,8 +5,6 @@
 
 #define BLINK_GPIO 35
 
-static const char *TAG_LED = "led-led";
-
 static led_strip_handle_t led_strip;
 
 void showColorOrigin(char* color, float brightness) {
@@ -84,7 +82,6 @@ static void offLed(){
 }
 
 static void initLed(void) {
-  // ESP_LOGI(TAG_LED, "Example configured to blink addressable LED!");
   led_strip_config_t strip_config = {
     .strip_gpio_num = BLINK_GPIO,
     .max_leds = 1, // at least one LED on board

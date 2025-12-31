@@ -3,8 +3,6 @@
 #include "iot_button.h"
 #include "storage.h"
 
-char * defaultButtonColor = "red";
-char * buttonColor = "";
 
 void (*singleClickAction)(void);
 void (*pressUpAction)(void);
@@ -24,16 +22,6 @@ static void button_single_click_cb(void *arg,void *usr_data) {
 }
 
 
-static void setButtonColor(char * color) {
-  buttonColor = color;
-}
-
-char * getButtonColor(){
-  if(strcmp(buttonColor, "") != 0) {
-    return buttonColor;
-  }
-  return defaultButtonColor;
-}
 
 bool isButtonPressed(void){
   return gpio_get_level(GPIOButtonNumber) == 0;

@@ -8,8 +8,6 @@
 #define REPORT_ID_KEYBOARD 1
 #endif
 
-static const char *TAG_KEYBOARD = "hid-keyboard";
-
 // keyboard mappings
 // https://github.com/espressif/tinyusb/blob/c64589db1a2af04a6726f03744999d00fa70c892/src/class/hid/hid.h
 

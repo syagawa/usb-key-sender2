@@ -80,7 +80,6 @@ static bool exists(const char *path) {
   return stat(path, &buffer) == 0;
 }
 
-
 static esp_err_t storage_init_spiflash(wl_handle_t *wl_handle)
 {
   // ESP_LOGI(TAG, "Initializing wear levelling");
@@ -92,14 +91,13 @@ static esp_err_t storage_init_spiflash(wl_handle_t *wl_handle)
   return wl_mount(data_partition, wl_handle);
 }
 
-
 static void removeFiles(void){
   fclose(file_path);
   remove(file_path);
 }
 
 
-void initSettings(char * readmeStr, char * initialDataStr){
+void initSettings(const char * readmeStr, const char * initialDataStr){
   wl_handle_t wl_handle = WL_INVALID_HANDLE;
   ESP_ERROR_CHECK(storage_init_spiflash(&wl_handle));
   const tinyusb_msc_spiflash_config_t config_spi = {
@@ -108,7 +106,6 @@ void initSettings(char * readmeStr, char * initialDataStr){
   ESP_ERROR_CHECK(tinyusb_msc_storage_init_spiflash(&config_spi));
   ESP_ERROR_CHECK(tinyusb_msc_storage_mount(BASE_PATH));
 
-  struct stat s = {0};
   if(!exists(directory)){
     if (mkdir(directory, 0775) != 0) {
       ESP_LOGE(TAG, "mkdir failed with errno: %s", strerror(errno));
@@ -136,37 +133,6 @@ void initSettings(char * readmeStr, char * initialDataStr){
   }
 }
 
-// cJSON * getSettings(){
-//   FILE *f;
-//   ESP_LOGI(TAG, "Reading file");
-//   f = fopen(file_path, "r");
-//   if (f == NULL) {
-//     ESP_LOGE(TAG, "Failed to open file for reading");
-//     return NULL;
-//   }
-
-//   char line[128];
-//   if(fgets(line, sizeof(line), f) == NULL){
-//     fclose(f);
-//     return NULL;
-//   }
-//   fclose(f);
-//   // strip newline
-//   char *pos = strchr(line, '\n');
-//   if (pos) {
-//       *pos = '\0';
-//   }
-//   ESP_LOGI(TAG, "Read from file: '%s'", line);
-
-//   char * str = strdup(line);
-
-//   ESP_LOGI(TAG, "json_str '%s'", str);
-//   cJSON * obj = cJSON_Parse(str);
-//   free(str);
-
-//   return obj;
-// }
-
 cJSON * getSettings(){
   FILE *f;
   // ESP_LOGI(TAG, "Reading file");
@@ -188,7 +154,7 @@ cJSON * getSettings(){
   }
 
   size_t read_size = fread(data, 1, fsize, f);
-  data[read_size] = '\0'; // 終端文字をセット
+  data[read_size] = '\0';
   fclose(f);
 
   // ESP_LOGI(TAG, "Read from file size: %d", (int)read_size);
@@ -201,35 +167,10 @@ cJSON * getSettings(){
     }
   }
 
-  free(data); // パースが終われば元の文字列は不要
+  free(data);
   return obj;
 }
 
-
-char * getSettingByKey(char * targetkey){
-  cJSON * obj = getSettings();
-  char * value = "";
-  if(obj != NULL){
-    // Iteratively check for existing keys
-    cJSON *currentItem = obj->child;
-    while (currentItem != NULL) {
-      const char *key = currentItem->string;
-      cJSON *value = currentItem;
-      if (cJSON_IsString(value) && (value->valuestring != NULL)) {
-        // ESP_LOGI(TAG, "Key: %s, Value: %s\n", key, value->valuestring);
-      } else {
-        ESP_LOGE(TAG, "Error getting value for key: %s\n", key);
-      }
-      currentItem = currentItem->next;
-    }
-    cJSON *target_elm = cJSON_GetObjectItemCaseSensitive(obj, targetkey);
-    if(target_elm){
-      value = target_elm->valuestring;
-    }
-  }
-
-  return value;
-}
 
 cJSON * getSettingArrayAsJSONByKey(char * targetkey) {
   cJSON * obj = getSettings();
