@@ -68,6 +68,13 @@ Docker
 }
 ```
 
+* Symbols / Punctuations
+```json
+{
+  "keys": "!\"#$%&'()=-~^`@{}[]+;*:,.<>?/_|\\"
+}
+```
+
 * Browser (Windows)
 ```json
 {
