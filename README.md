@@ -4,10 +4,9 @@
 
 * M5AtomS3U
 https://docs.m5stack.com/en/core/AtomS3U
-
-* PC
-VS code
-Docker
+* PC(Windows, Linux, Mac)
+* VS code
+* Docker
 
 ## Instalation (VS Code Dev Container)
 
