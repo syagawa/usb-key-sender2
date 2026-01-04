@@ -171,6 +171,21 @@ cJSON * getSettings(){
   return obj;
 }
 
+char * getSettingStrByKeyRequireFree(char * targetkey) {
+  cJSON * obj = getSettings();
+  if (obj == NULL) return NULL;
+
+  cJSON *item = cJSON_GetObjectItemCaseSensitive(obj, targetkey);
+  char* result = NULL;
+
+  if (cJSON_IsString(item) && (item->valuestring != NULL)) {
+    result = strdup(item->valuestring);
+  }
+
+  cJSON_Delete(obj);
+  return result;     // 呼び出し側で最後に free()
+}
+
 
 cJSON * getSettingArrayAsJSONByKey(char * targetkey) {
   cJSON * obj = getSettings();
