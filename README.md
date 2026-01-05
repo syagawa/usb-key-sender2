@@ -121,6 +121,18 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
+* US Layout
+```json
+{
+  "keys": [
+    "[]@{}[]~"
+  ],
+  "layout": "us"
+}
+```
+
+
+
 ---
 
 ## erase rom
