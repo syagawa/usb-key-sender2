@@ -148,8 +148,6 @@ void enterMain(){
 
   initSettings(readmeStr, initialDataStr);
 
-  cJSON* item = cJSON_GetObjectItemCaseSensitive(json, "AAA");
-
   char* layout = getSettingStrByKeyRequireFree("layout");
   if (layout != NULL) {
       if (strcmp(layout, "us") == 0) {
