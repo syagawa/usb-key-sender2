@@ -21,7 +21,7 @@ https://docs.m5stack.com/en/core/AtomS3U
 
 1. Connect AtomS3U to PC
 2. Press reset button long
-3. `idf.py -p /dev/ttyACM0 erase-flash`
+3. Open terminal in extension and `$ idf.py -p /dev/ttyACM0 erase-flash`
 4. Press reset button long
 5. Click `Build Project` button (spanner icon) at VS Code extension.
 6. Click `Flash Device` button (thunder icon) at VS Code extension.
