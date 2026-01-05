@@ -67,6 +67,18 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
+* Login
+```json
+{
+  "keys": [
+    "<id or email>",
+    {"key": "TAB"},
+    "<password>",
+    {"key": "ENTER"}
+  ]
+}
+```
+
 * Symbols / Punctuations
 ```json
 {
@@ -86,6 +98,24 @@ https://docs.m5stack.com/en/core/AtomS3U
   ]
 }
 ```
+
+* Browser (windows / Linux)
+```json
+{
+  "keys": [
+    {"mod": "GUI"},
+    "chrome",
+    {"key": "ENTER"},
+    {"key": "TAB"},
+    {"key": "ENTER"},
+    "https://gemini.google.com/",
+    {"key": "ENTER"},
+    "What is the meaning of 42?",
+    {"key": "ENTER"}
+  ]
+}
+```
+
 
 * ipconfig (Windows)
 ```json
