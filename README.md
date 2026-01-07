@@ -33,18 +33,34 @@ https://docs.m5stack.com/en/core/AtomS3U
 
 
 
-## usages
+## Usages
 
-### settings
+### Settings
 1. Connect AtomS3U to PC with pressing button
 2. Open and edit settings.txt
 3. Close settings.txt
 4. Unmount the USB device, wait about 10 seconds, and then unplug it.
 
-### input key
+### Input key
 1. Connect AtomS3U to PC
 2. Wait until the LED lights up in green and then turns off.(If it blinks red, it indicates an error. Please check `settings.txt`.)
 3. Press button to input key to PC.
+
+
+## Examples of Modifier Key Input
+
+* Shift:
+    * Shift Key + A
+    * `{"mod": "SHIFT", "key": "a"}`
+* Control:
+    * Ctrl Key + C 
+    * `{"mod": "CTRL", "key": "c"}`
+* Alt:
+    * Alt Key + L
+    * `{"mod": "ALT", "key": "l"}`
+* Windows Key (Win/Cmd on Mac): 
+    * Windows Key + D
+    * `{"mod": "GUI", "key": "d"}`
 
 
 ## JSON examples
