@@ -1,4 +1,5 @@
 #include "class/hid/hid_device.h"
+#include "random.h"
 
 #ifndef HID_KEY_JIS_RO
 #define HID_KEY_JIS_RO 0x87  // JIS配列の「ろ」 / アンダースコア
@@ -458,26 +459,48 @@ void executeAction(cJSON **keys, int index) {
   if (cJSON_IsString(item)) {
     usb_hid_print_string(item->valuestring);
   } else if (cJSON_IsObject(item)) {
-    uint8_t keycode = 0, modifier = 0;
-    cJSON *k_obj = cJSON_GetObjectItemCaseSensitive(item, "key");
-    cJSON *m_obj = cJSON_GetObjectItemCaseSensitive(item, "mod");
+    cJSON *t_obj = cJSON_GetObjectItemCaseSensitive(item, "token");
 
-    // 修飾キーの解析
-    if (cJSON_IsString(m_obj)) {
-      const char *m = m_obj->valuestring;
-      if      (strcmp(m, "CTRL")  == 0) modifier = KEYBOARD_MODIFIER_LEFTCTRL;
-      else if (strcmp(m, "SHIFT") == 0) modifier = KEYBOARD_MODIFIER_LEFTSHIFT;
-      else if (strcmp(m, "ALT") == 0)   modifier = KEYBOARD_MODIFIER_LEFTALT;
-      else if (strcmp(m, "GUI") == 0)   modifier = KEYBOARD_MODIFIER_LEFTGUI;
+    if(cJSON_IsString(t_obj)){
+      const char *t = t_obj->valuestring;
+      if(strcmp(t, "UUID") == 0){
+        uuid_string_t id = generate_v4_uuid();
+        usb_hid_print_string(id.out);
+          // uuid_string_t my_id = generate_v4_uuid();
+          // printf("ID: %s\n", my_id.out);
+
+
+      }else if(strcmp(t, "RANDOM") == 0){
+
+        cJSON *r_obj = cJSON_GetObjectItemCaseSensitive(item, "range");
+      }else{
+
+      }
+    }else{
+
+      uint8_t keycode = 0, modifier = 0;
+      cJSON *k_obj = cJSON_GetObjectItemCaseSensitive(item, "key");
+      cJSON *m_obj = cJSON_GetObjectItemCaseSensitive(item, "mod");
+  
+      // 修飾キーの解析
+      if (cJSON_IsString(m_obj)) {
+        const char *m = m_obj->valuestring;
+        if      (strcmp(m, "CTRL")  == 0) modifier = KEYBOARD_MODIFIER_LEFTCTRL;
+        else if (strcmp(m, "SHIFT") == 0) modifier = KEYBOARD_MODIFIER_LEFTSHIFT;
+        else if (strcmp(m, "ALT") == 0)   modifier = KEYBOARD_MODIFIER_LEFTALT;
+        else if (strcmp(m, "GUI") == 0)   modifier = KEYBOARD_MODIFIER_LEFTGUI;
+      }
+  
+      // キーコードの解析
+      if (cJSON_IsString(k_obj)) {
+        const char *k = k_obj->valuestring;
+        keycode = getHidKeycodeFromStr(k);
+      }
+  
+      // 共通関数を呼び出し
+      send_hid_report_and_wait(modifier, keycode);
     }
 
-    // キーコードの解析
-    if (cJSON_IsString(k_obj)) {
-      const char *k = k_obj->valuestring;
-      keycode = getHidKeycodeFromStr(k);
-    }
 
-    // 共通関数を呼び出し
-    send_hid_report_and_wait(modifier, keycode);
   }
 }
