@@ -466,13 +466,17 @@ void executeAction(cJSON **keys, int index) {
       if(strcmp(t, "UUID") == 0){
         uuid_string_t id = generate_v4_uuid();
         usb_hid_print_string(id.out);
-          // uuid_string_t my_id = generate_v4_uuid();
-          // printf("ID: %s\n", my_id.out);
-
-
-      }else if(strcmp(t, "RANDOM") == 0){
-
+      }else if(strcmp(t, "NUMBER") == 0){
         cJSON *r_obj = cJSON_GetObjectItemCaseSensitive(item, "range");
+        char result[8];
+        if(cJSON_IsString(r_obj)){
+          const char *range = r_obj->valuestring;
+          get_random_str_from_range(range, result, sizeof(result));
+        }else{
+          const char *range = "0-9";
+          get_random_str_from_range(range, result, sizeof(result));
+        }
+        usb_hid_print_string(result);
       }else{
 
       }

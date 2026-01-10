@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "esp_random.h"
+#include "esp_system.h"
 
 typedef struct {
   char out[37];
@@ -24,4 +26,32 @@ uuid_string_t generate_v4_uuid() {
 // void app_main(void) {
   // uuid_string_t my_id = generate_v4_uuid();
   // printf("ID: %s\n", my_id.out);
+// }
+
+
+
+bool get_random_str_from_range(const char *range_str, char *out_str, size_t out_size) {
+  int min, max;
+
+  if (sscanf(range_str, "%d-%d", &min, &max) != 2 || min > max) {
+    return false;
+  }
+
+  uint32_t span = (uint32_t)(max - min + 1);
+  uint32_t r, limit = (UINT32_MAX / span) * span;
+
+  do {
+      r = esp_random();
+  } while (r >= limit);
+
+  int value = min + (r % span);
+  snprintf(out_str, out_size, "%d", value);
+
+  return true;
+}
+
+// char result[8];
+
+// if (get_random_str_from_range("0-13", result, sizeof(result))) {
+//   printf("random string = %s\n", result);
 // }
