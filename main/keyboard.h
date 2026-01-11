@@ -471,10 +471,10 @@ void executeAction(cJSON **keys, int index) {
         char result[8];
         if(cJSON_IsString(r_obj)){
           const char *range = r_obj->valuestring;
-          get_random_str_from_range(range, result, sizeof(result));
+          getRandomStrFromRange(range, result, sizeof(result));
         }else{
           const char *range = "0-9";
-          get_random_str_from_range(range, result, sizeof(result));
+          getRandomStrFromRange(range, result, sizeof(result));
         }
         usb_hid_print_string(result);
       }else{

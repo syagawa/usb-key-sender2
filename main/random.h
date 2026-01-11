@@ -30,7 +30,7 @@ uuid_string_t generate_v4_uuid() {
 
 
 
-bool get_random_str_from_range(const char *range_str, char *out_str, size_t out_size) {
+bool getRandomStrFromRange(const char *range_str, char *out_str, size_t out_size) {
   int min, max;
 
   if (sscanf(range_str, "%d-%d", &min, &max) != 2 || min > max) {
@@ -52,6 +52,6 @@ bool get_random_str_from_range(const char *range_str, char *out_str, size_t out_
 
 // char result[8];
 
-// if (get_random_str_from_range("0-13", result, sizeof(result))) {
+// if (getRandomStrFromRange("0-13", result, sizeof(result))) {
 //   printf("random string = %s\n", result);
 // }
