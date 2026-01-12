@@ -213,7 +213,7 @@ static void send_hid_report_and_wait(uint8_t modifier, uint8_t keycode) {
   uint8_t empty_report[6] = {0, 0, 0, 0, 0, 0};
 
   tud_hid_keyboard_report(REPORT_ID_KEYBOARD, modifier, key_report);
-  vTaskDelay(pdMS_TO_TICKS(key_task_delay_ms5;
+  vTaskDelay(pdMS_TO_TICKS(key_task_delay_ms));
 
   while (!tud_hid_ready()) {
     vTaskDelay(pdMS_TO_TICKS(1));
@@ -221,7 +221,7 @@ static void send_hid_report_and_wait(uint8_t modifier, uint8_t keycode) {
 
   tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, empty_report);
   vTaskDelay(pdMS_TO_TICKS(key_task_delay_ms));
-  while (!tud_hid_ready(5 {
+  while (!tud_hid_ready()) {
     vTaskDelay(pdMS_TO_TICKS(1));
   }
 }
