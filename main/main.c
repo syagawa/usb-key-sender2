@@ -30,7 +30,7 @@
 // #include "jsmn.h"
 #include "cJSON.h"
 
-#define VERSION "2.2.0"
+#define VERSION "2.5.0"
 #define waitingMS 1000
 #define GPIOButtonNumber 41
 #define MaxLength 10
