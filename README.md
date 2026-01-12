@@ -190,7 +190,8 @@ https://docs.m5stack.com/en/core/AtomS3U
 * Key Input Delay
 Controls the delay between consecutive keyboard input events.
 Increasing this value slows down key input, while decreasing it makes input faster.
-Range: 0–1000 ms.(default: 10ms)
+Range: 0–1000 ms (default: 1ms).
+If key chattering occurs, try increasing this value.
 ```json
 {
   "keys": [
