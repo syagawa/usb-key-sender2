@@ -17,7 +17,7 @@
 #define TUSB_DESC_TOTAL_LEN      (TUD_CONFIG_DESC_LEN + CFG_TUD_HID * TUD_HID_DESC_LEN)
 
 
-uint32_t key_task_delay_ms = 10;
+uint32_t key_task_delay_ms = 1;
 
 /**
  * @brief HID report descriptor
