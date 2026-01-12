@@ -1,4 +1,5 @@
 #include "class/hid/hid_device.h"
+#include "random.h"
 
 #ifndef HID_KEY_JIS_RO
 #define HID_KEY_JIS_RO 0x87  // JIS配列の「ろ」 / アンダースコア
@@ -14,6 +15,9 @@
 /************* TinyUSB descriptors ****************/
 
 #define TUSB_DESC_TOTAL_LEN      (TUD_CONFIG_DESC_LEN + CFG_TUD_HID * TUD_HID_DESC_LEN)
+
+
+uint32_t key_task_delay_ms = 10;
 
 /**
  * @brief HID report descriptor
@@ -209,15 +213,15 @@ static void send_hid_report_and_wait(uint8_t modifier, uint8_t keycode) {
   uint8_t empty_report[6] = {0, 0, 0, 0, 0, 0};
 
   tud_hid_keyboard_report(REPORT_ID_KEYBOARD, modifier, key_report);
-  vTaskDelay(pdMS_TO_TICKS(20));
+  vTaskDelay(pdMS_TO_TICKS(key_task_delay_ms5;
 
   while (!tud_hid_ready()) {
     vTaskDelay(pdMS_TO_TICKS(1));
   }
 
   tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, empty_report);
-  vTaskDelay(pdMS_TO_TICKS(20));
-  while (!tud_hid_ready()) {
+  vTaskDelay(pdMS_TO_TICKS(key_task_delay_ms));
+  while (!tud_hid_ready(5 {
     vTaskDelay(pdMS_TO_TICKS(1));
   }
 }
@@ -458,26 +462,52 @@ void executeAction(cJSON **keys, int index) {
   if (cJSON_IsString(item)) {
     usb_hid_print_string(item->valuestring);
   } else if (cJSON_IsObject(item)) {
-    uint8_t keycode = 0, modifier = 0;
-    cJSON *k_obj = cJSON_GetObjectItemCaseSensitive(item, "key");
-    cJSON *m_obj = cJSON_GetObjectItemCaseSensitive(item, "mod");
+    cJSON *t_obj = cJSON_GetObjectItemCaseSensitive(item, "token");
 
-    // 修飾キーの解析
-    if (cJSON_IsString(m_obj)) {
-      const char *m = m_obj->valuestring;
-      if      (strcmp(m, "CTRL")  == 0) modifier = KEYBOARD_MODIFIER_LEFTCTRL;
-      else if (strcmp(m, "SHIFT") == 0) modifier = KEYBOARD_MODIFIER_LEFTSHIFT;
-      else if (strcmp(m, "ALT") == 0)   modifier = KEYBOARD_MODIFIER_LEFTALT;
-      else if (strcmp(m, "GUI") == 0)   modifier = KEYBOARD_MODIFIER_LEFTGUI;
+    if(cJSON_IsString(t_obj)){
+      const char *t = t_obj->valuestring;
+      if(strcmp(t, "UUID") == 0){
+        uuid_string_t id = generateV4UUID();
+        usb_hid_print_string(id.out);
+      }else if(strcmp(t, "NUMBER") == 0){
+        cJSON *r_obj = cJSON_GetObjectItemCaseSensitive(item, "range");
+        char result[8];
+        if(cJSON_IsString(r_obj)){
+          const char *range = r_obj->valuestring;
+          getRandomStrFromRange(range, result, sizeof(result));
+        }else{
+          const char *range = "0-9";
+          getRandomStrFromRange(range, result, sizeof(result));
+        }
+        usb_hid_print_string(result);
+      }else{
+
+      }
+    }else{
+
+      uint8_t keycode = 0, modifier = 0;
+      cJSON *k_obj = cJSON_GetObjectItemCaseSensitive(item, "key");
+      cJSON *m_obj = cJSON_GetObjectItemCaseSensitive(item, "mod");
+  
+      // 修飾キーの解析
+      if (cJSON_IsString(m_obj)) {
+        const char *m = m_obj->valuestring;
+        if      (strcmp(m, "CTRL")  == 0) modifier = KEYBOARD_MODIFIER_LEFTCTRL;
+        else if (strcmp(m, "SHIFT") == 0) modifier = KEYBOARD_MODIFIER_LEFTSHIFT;
+        else if (strcmp(m, "ALT") == 0)   modifier = KEYBOARD_MODIFIER_LEFTALT;
+        else if (strcmp(m, "GUI") == 0)   modifier = KEYBOARD_MODIFIER_LEFTGUI;
+      }
+  
+      // キーコードの解析
+      if (cJSON_IsString(k_obj)) {
+        const char *k = k_obj->valuestring;
+        keycode = getHidKeycodeFromStr(k);
+      }
+  
+      // 共通関数を呼び出し
+      send_hid_report_and_wait(modifier, keycode);
     }
 
-    // キーコードの解析
-    if (cJSON_IsString(k_obj)) {
-      const char *k = k_obj->valuestring;
-      keycode = getHidKeycodeFromStr(k);
-    }
 
-    // 共通関数を呼び出し
-    send_hid_report_and_wait(modifier, keycode);
   }
 }

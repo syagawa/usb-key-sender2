@@ -177,6 +177,54 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
+* US Layout
+```json
+{
+  "keys": [
+    "[]@{}[]~"
+  ],
+  "layout": "us"
+}
+```
+
+* Key Input Delay
+Controls the delay between consecutive keyboard input events.
+Increasing this value slows down key input, while decreasing it makes input faster.
+Range: 0–1000 ms.(default: 10ms)
+```json
+{
+  "keys": [
+    "samplestring"
+  ],
+  "delayms": 1
+}
+```
+
+
+* UUID
+```json
+{
+  "keys": [
+    {"token": "UUID"}
+  ],
+```
+
+* Random Number 
+default range is 0-9.
+```json
+{
+  "keys": [
+    {"token": "NUMBER"}
+  ],
+```
+
+* Random Number 10-20
+```json
+{
+  "keys": [
+    {"token": "NUMBER", "range": "10-20"}
+  ],
+```
 
 
 ---
