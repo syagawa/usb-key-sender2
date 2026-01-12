@@ -207,7 +207,8 @@ If key chattering occurs, try increasing this value.
 {
   "keys": [
     {"token": "UUID"}
-  ],
+  ]
+}
 ```
 
 * Random Number 
@@ -216,7 +217,8 @@ default range is 0-9.
 {
   "keys": [
     {"token": "NUMBER"}
-  ],
+  ]
+}
 ```
 
 * Random Number 10-20
@@ -224,7 +226,8 @@ default range is 0-9.
 {
   "keys": [
     {"token": "NUMBER", "range": "10-20"}
-  ],
+  ]
+}
 ```
 
 
