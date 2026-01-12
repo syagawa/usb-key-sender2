@@ -7,7 +7,7 @@ typedef struct {
   char out[37];
 } uuid_string_t;
 
-uuid_string_t generate_v4_uuid() {
+uuid_string_t generateV4UUID() {
   uint8_t u[16];
   uuid_string_t result;
 
@@ -24,7 +24,7 @@ uuid_string_t generate_v4_uuid() {
 }
 
 // void app_main(void) {
-  // uuid_string_t my_id = generate_v4_uuid();
+  // uuid_string_t my_id = generateV4UUID();
   // printf("ID: %s\n", my_id.out);
 // }
 

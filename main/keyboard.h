@@ -464,7 +464,7 @@ void executeAction(cJSON **keys, int index) {
     if(cJSON_IsString(t_obj)){
       const char *t = t_obj->valuestring;
       if(strcmp(t, "UUID") == 0){
-        uuid_string_t id = generate_v4_uuid();
+        uuid_string_t id = generateV4UUID();
         usb_hid_print_string(id.out);
       }else if(strcmp(t, "NUMBER") == 0){
         cJSON *r_obj = cJSON_GetObjectItemCaseSensitive(item, "range");
