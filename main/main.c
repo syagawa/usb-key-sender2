@@ -150,11 +150,17 @@ void enterMain(){
 
   char* layout = getSettingStrByKeyRequireFree("layout");
   if (layout != NULL) {
-      if (strcmp(layout, "us") == 0) {
-        keyboard_layout_mode = "us";
-      }
-      free(layout);
+    if (strcmp(layout, "us") == 0) {
+      keyboard_layout_mode = "us";
+    }
+    free(layout);
   }
+
+  uint32_t delayms = getSettingsNumberByKey("delayms");
+  if (delayms >= 0 && delayms <= 1000) {
+    key_task_delay_ms = delayms;
+  }
+
 
   int parseError = 0;
   cJSON *json_arr = getSettingArrayAsJSONByKey("keys");

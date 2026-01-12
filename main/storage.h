@@ -187,6 +187,45 @@ char * getSettingStrByKeyRequireFree(char * targetkey) {
 }
 
 
+int getSettingsNumberByKey(char * targetkey) {
+  int i = -1;
+
+  cJSON * obj = getSettings();
+  if (obj == NULL) return i;
+
+  cJSON *item = cJSON_GetObjectItemCaseSensitive(obj, targetkey);
+  if (cJSON_IsNumber(item)) {
+    i = item->valueint;
+  }
+
+  cJSON_Delete(obj);
+  return i;
+
+}
+
+
+
+void parse_json(const char *json_str)
+{
+    cJSON *root = cJSON_Parse(json_str);
+    if (root == NULL) {
+        printf("JSON parse error\n");
+        return;
+    }
+
+    cJSON *aaa = cJSON_GetObjectItem(root, "aaa");
+
+    if (cJSON_IsNumber(aaa)) {
+        int value = aaa->valueint;   // 整数として取得
+        printf("aaa = %d\n", value);
+    } else {
+        printf("aaa does not exist or is not a number\n");
+    }
+
+    cJSON_Delete(root);
+}
+
+
 cJSON * getSettingArrayAsJSONByKey(char * targetkey) {
   cJSON * obj = getSettings();
   if (obj == NULL) return NULL;
