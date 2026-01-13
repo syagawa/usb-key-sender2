@@ -58,10 +58,11 @@ https://docs.m5stack.com/en/core/AtomS3U
 * Alt:
     * Alt Key + L
     * `{"mod": "ALT", "key": "l"}`
-* Windows Key (Win/Cmd on Mac): 
+* GUI Key (Windows Key / Command Key on Mac): 
     * Windows Key + D
     * `{"mod": "GUI", "key": "d"}`
-
+* Multiple Modifiers Support Chain keys using | to press them simultaneously:
+    * `{"mod": "SHIFT|CTRL|ALT", "key": "s"}`
 
 ## JSON examples
 
@@ -115,7 +116,7 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
-* Browser (windows / Linux)
+* Chrome (windows / Linux)
 ```json
 {
   "keys": [
@@ -132,6 +133,19 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
+* Chrome Secret mode (windows / Linux)
+```json
+{
+  "keys": [
+    {"mod": "GUI"},
+    "chrome",
+    {"key": "ENTER"},
+    {"key": "TAB"},
+    {"key": "ENTER"},
+    {"mod": "SHIFT|CTRL", "key": "ENTER"},
+  ]
+}
+```
 
 * ipconfig (Windows)
 ```json
