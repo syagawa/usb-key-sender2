@@ -488,23 +488,24 @@ void executeAction(cJSON **keys, int index) {
       uint8_t keycode = 0, modifier = 0;
       cJSON *k_obj = cJSON_GetObjectItemCaseSensitive(item, "key");
       cJSON *m_obj = cJSON_GetObjectItemCaseSensitive(item, "mod");
-  
-      // 修飾キーの解析
+
       if (cJSON_IsString(m_obj)) {
         const char *m = m_obj->valuestring;
-        if      (strcmp(m, "CTRL")  == 0) modifier = KEYBOARD_MODIFIER_LEFTCTRL;
-        else if (strcmp(m, "SHIFT") == 0) modifier = KEYBOARD_MODIFIER_LEFTSHIFT;
-        else if (strcmp(m, "ALT") == 0)   modifier = KEYBOARD_MODIFIER_LEFTALT;
-        else if (strcmp(m, "GUI") == 0)   modifier = KEYBOARD_MODIFIER_LEFTGUI;
+        if (strstr(m, "RCTRL"))  modifier |= KEYBOARD_MODIFIER_RIGHTCTRL;
+        else if (strstr(m, "CTRL"))  modifier |= KEYBOARD_MODIFIER_LEFTCTRL;
+        if (strstr(m, "RSHIFT")) modifier |= KEYBOARD_MODIFIER_RIGHTSHIFT;
+        else if (strstr(m, "SHIFT")) modifier |= KEYBOARD_MODIFIER_LEFTSHIFT;
+        if (strstr(m, "RALT"))   modifier |= KEYBOARD_MODIFIER_RIGHTALT;
+        else if (strstr(m, "ALT"))   modifier |= KEYBOARD_MODIFIER_LEFTALT;
+        if (strstr(m, "RGUI"))   modifier |= KEYBOARD_MODIFIER_RIGHTGUI;
+        else if (strstr(m, "GUI"))   modifier |= KEYBOARD_MODIFIER_LEFTGUI;
       }
-  
-      // キーコードの解析
+
       if (cJSON_IsString(k_obj)) {
         const char *k = k_obj->valuestring;
         keycode = getHidKeycodeFromStr(k);
       }
-  
-      // 共通関数を呼び出し
+
       send_hid_report_and_wait(modifier, keycode);
     }
 
