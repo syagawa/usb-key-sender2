@@ -96,8 +96,8 @@ static void removeFiles(void){
   remove(file_path);
 }
 
-
-void initSettings(const char * readmeStr, const char * initialDataStr){
+void initStorageAndFiles(const char * readmeStr, const char * initialDataStr, int mode){
+  // mode 1: from storage, 2: from main
   wl_handle_t wl_handle = WL_INVALID_HANDLE;
   ESP_ERROR_CHECK(storage_init_spiflash(&wl_handle));
   const tinyusb_msc_spiflash_config_t config_spi = {
@@ -122,13 +122,12 @@ void initSettings(const char * readmeStr, const char * initialDataStr){
     }
   }
 
-  if (!exists(file_path_readme)) {
-    FILE *f2 = fopen(file_path_readme, "w");
-    if(f2){
-      fputs(readmeStr, f2);
-      fclose(f2);
-    }else{
-      ESP_LOGE(TAG, "Failed to open file for writing");
+  if(mode == 1){
+    FILE *f_readme = fopen(file_path_readme, "w");
+    if(f_readme){
+      fputs(readmeStr, f_readme);
+      fclose(f_readme);
+      ESP_LOGI(TAG, "README updated");
     }
   }
 }

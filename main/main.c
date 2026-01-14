@@ -42,7 +42,7 @@
 #include "storage.h"
 
 const char * initialDataStr = "{\"keys\": [\"sample\", \"sample2\", \"example-111\"]}";
-static const char * readmeStr = "usb-key-sender-"VERSION"\nReset Settings: Delete settings.txt and remove this USB from PC.";
+static const char * readmeStr = "usb-key-sender-"VERSION"\nEdit Settings: Open SETTINGS.TXT by Notepad app and edit json.\nReset Settings: Remove SETTINGS.TXT and remove this USB from PC.";
 
 int keyIndex = 0;
 cJSON *keys[MaxLength];
@@ -146,8 +146,6 @@ void enterMain(){
   pressUpAction = action2;
   longPressedAction = action3;
 
-  initSettings(readmeStr, initialDataStr);
-
   char* layout = getSettingStrByKeyRequireFree("layout");
   if (layout != NULL) {
     if (strcmp(layout, "us") == 0) {
@@ -213,13 +211,14 @@ void app_main(void){
     // ESP_LOGI(TAG, "restarted esp");
     initLed();
     lightLed("green");
-    initSettings(readmeStr, initialDataStr);
+    initStorageAndFiles(readmeStr, initialDataStr, 1);
     enterSettingsMode();
     // settings mode
   }else{
     if(isButtonPressed()){
       esp_restart();
     }else{
+      initStorageAndFiles(readmeStr, initialDataStr, 2);
       initButtonForKeyboard();
       initLed();
       // ESP_LOGI(TAG, "normal");
