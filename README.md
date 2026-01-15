@@ -19,54 +19,35 @@ https://docs.m5stack.com/en/core/AtomS3U
 
 ## build and settings
 
-1. Connect AtomS3U to PC
-2. Press reset button long
-3. Open terminal in extension and `$ idf.py -p /dev/ttyACM0 erase-flash`
-4. Press reset button long
+1. Connect AtomS3U to PC.
+2. Press reset button long.
+3. Open terminal in extension and `$ idf.py -p /dev/ttyACM0 erase-flash`.
+4. Press reset button long.
 5. Click `Build Project` button (spanner icon) at VS Code extension.
-6. Click `Flash Device` button (thunder icon) at VS Code extension.
-7. Remove AtomS3U from PC
-8. Connect AtomS3U to PC with pressing button (The following steps are required for the initial build)
-9. Open and edit settings.txt
-10. Close settings.txt
-11. Unmount the USB device, wait about 5 seconds, and then unplug it. (On Windows, when it is unmounted, the LED blinks blue or green. Then unplug it.)
-
-
+6. Click `Flash Device` button (thunder icon) at VS Code extension
+7. Remove AtomS3U from PC.
+8. Connect AtomS3U to PC with pressing button.
+9. Open and edit SETTINGS.TXT.
+10. Close SETTINGS.TXT.
+11. Unmount the USB device, wait about 5 seconds, and then unplug it. (On Windows, when it is unmounted, the LED blinks blue or green. Then unplug it).
 
 ## Usages
 
 ### Settings
-1. Connect AtomS3U to PC with pressing button
-2. Open and edit settings.txt
-3. Close settings.txt
-4. Unmount the USB device, wait about 10 seconds, and then unplug it.
+1. Connect AtomS3U to PC with pressing button.
+2. Open and edit SETTINGS.TXT.
+3. Close SETTINGS.TXT.
+4. Unmount the USB device, wait about 5 seconds, and then unplug it.
 
 ### Input key
 1. Connect AtomS3U to PC
-2. Wait until the LED lights up in green and then turns off.(If it blinks red, it indicates an error. Please check `settings.txt`.)
+2. Wait until the LED lights up in green and then turns off. If it blinks red, it indicates an error. Please check `SETTINGS.TXT`.
 3. Press button to input key to PC.
 
 
-## Examples of Modifier Key Input
-
-* Shift:
-    * Shift Key + A
-    * `{"mod": "SHIFT", "key": "a"}`
-* Control:
-    * Ctrl Key + C 
-    * `{"mod": "CTRL", "key": "c"}`
-* Alt:
-    * Alt Key + L
-    * `{"mod": "ALT", "key": "l"}`
-* GUI Key (Windows Key / Command Key on Mac): 
-    * Windows Key + D
-    * `{"mod": "GUI", "key": "d"}`
-* Multiple Modifiers Support Chain keys using | to press them simultaneously:
-    * `{"mod": "SHIFT|CTRL|ALT", "key": "s"}`
-
 ## JSON examples
 
-* Notepad (Windows)
+* Open notepad (Windows)
 ```json
 {
   "keys": [
@@ -103,7 +84,7 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
-* Browser (Windows)
+* Open browser (Windows)
 ```json
 {
   "keys": [
@@ -116,7 +97,7 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
-* Chrome (windows / Linux)
+* Open chrome (windows / Linux)
 ```json
 {
   "keys": [
@@ -133,7 +114,7 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
-* Chrome Secret mode (windows / Linux)
+* Open chrome secret mode (windows / Linux)
 ```json
 {
   "keys": [
@@ -191,16 +172,6 @@ https://docs.m5stack.com/en/core/AtomS3U
 }
 ```
 
-* US Layout
-```json
-{
-  "keys": [
-    "[]@{}[]~"
-  ],
-  "layout": "us"
-}
-```
-
 * Key Input Delay
 Controls the delay between consecutive keyboard input events.
 Increasing this value slows down key input, while decreasing it makes input faster.
@@ -211,10 +182,9 @@ If key chattering occurs, try increasing this value.
   "keys": [
     "samplestring"
   ],
-  "delayms": 1
+  "delayms": 20
 }
 ```
-
 
 * UUID
 ```json
@@ -225,7 +195,7 @@ If key chattering occurs, try increasing this value.
 }
 ```
 
-* Random Number 
+* Random number
 default range is 0-9.
 ```json
 {
@@ -235,7 +205,7 @@ default range is 0-9.
 }
 ```
 
-* Random Number 10-20
+* Random number 10-20
 ```json
 {
   "keys": [
@@ -243,7 +213,6 @@ default range is 0-9.
   ]
 }
 ```
-
 
 ---
 
