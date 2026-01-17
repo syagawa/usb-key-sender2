@@ -47,7 +47,7 @@ static const char * readmeStr = "usb-key-sender-"VERSION"\nEdit Settings: Open S
 int keyIndex = 0;
 cJSON *keys[MaxLength];
 int array_keys_count = 0;
-const char *colors[] = {"RED", "BLUE", "MAGENTA", "GREEN", "PINK", "YELLOW", "SKYBLUE", "BROWN", "PURPLE"};
+const char *colors[] = {"BLUE", "MAGENTA", "GREEN", "PINK", "YELLOW", "CYAN", "BROWN", "PURPLE", "GREENYELLOW"};
 const int colorsLength = sizeof(colors) / sizeof(colors[0]);
 int colorIndex = -1;
 
