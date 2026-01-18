@@ -62,7 +62,10 @@ static void setIndex(int c) {
     pressedCount = 0;
     colorIndex = -1;
   }else{
-    colorIndex = keyIndex % colorsLength;
+    colorIndex = (keyIndex % colorsLength) - 1;
+    if(colorIndex == -1){
+      colorIndex = 0;
+    }
   }
 
 }
