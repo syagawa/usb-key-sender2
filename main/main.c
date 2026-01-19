@@ -50,6 +50,8 @@ int array_keys_count = 0;
 const char *colors[] = {"BLUE", "MAGENTA", "GREEN", "PINK", "YELLOW", "CYAN", "BROWN", "PURPLE", "GREENYELLOW"};
 const int colorsLength = sizeof(colors) / sizeof(colors[0]);
 int colorIndex = -1;
+bool keysCountIsOne = false;
+const char *colorForOne = "OLIVE";
 
 int pressedCount = 0;
 bool buttonIsLongPressed = false;
@@ -57,6 +59,9 @@ TickType_t lastIncrementTime = 0;
 
 static void setIndex(int c) {
   keyIndex = c;
+  if(keyIndex == 1 && array_keys_count == 1){
+    keysCountIsOne = true;
+  }
   if(keyIndex >= array_keys_count){
     keyIndex = 0;
     pressedCount = 0;
@@ -92,6 +97,11 @@ static void checkAndIncrementCount() {
 
 static void checkAndSetColor() {
 
+  if(keysCountIsOne){
+    lightLed(colorForOne);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    keysCountIsOne = false;
+  }
   if(colorIndex == -1){
     offLed();
     return;
