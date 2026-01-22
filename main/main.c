@@ -21,20 +21,16 @@
 #include "led_strip.h"
 #include "sdkconfig.h"
 
-// #include "iot_button.h"
-
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
 
-// #include "jsmn.h"
 #include "cJSON.h"
 
 #define VERSION "2.6.5"
 #define waitingMS 1000
 #define GPIOButtonNumber 41
 #define MaxLength 10
-
 
 #include "led.h"
 #include "keyboard.h"
@@ -72,7 +68,6 @@ static void setIndex(int c) {
       colorIndex = 0;
     }
   }
-
 }
 
 static void startCount() {
@@ -96,7 +91,6 @@ static void checkAndIncrementCount() {
 }
 
 static void checkAndSetColor() {
-
   if(keysCountIsOne){
     lightLed(colorForOne);
     vTaskDelay(pdMS_TO_TICKS(100));
@@ -106,20 +100,12 @@ static void checkAndSetColor() {
     offLed();
     return;
   }
-
   char *s = colors[colorIndex];
   lightLed(s);
 }
 
-
-
-
 static void action1(void *arg,void *usr_data) {
-
-  // char *str = keys[keyIndex];
-  // usb_hid_print_string(str);
   executeAction(keys, keyIndex);
-
   incrementCount();
 }
 
@@ -128,10 +114,8 @@ static void action2(void *arg, void *data) {
 }
 
 static void action3(void *arg, void *data) {
-  // ESP_LOGI(TAG, "button_long_cb %d", pressedCount);
   startCount();
 }
-
 
 void enterSettingsMode(){
   lightLed("white");
@@ -149,12 +133,10 @@ void enterSettingsMode(){
       vTaskDelay(pdMS_TO_TICKS(500));
       offLed();
     }
-
   }
 }
 
 void enterMain(){
-
   singleClickAction = action1;
   pressUpAction = action2;
   longPressedAction = action3;
@@ -171,7 +153,6 @@ void enterMain(){
   if (delayms >= 0 && delayms <= 1000) {
     key_task_delay_ms = delayms;
   }
-
 
   int parseError = 0;
   cJSON *json_arr = getSettingArrayAsJSONByKey("keys");
@@ -221,12 +202,11 @@ void app_main(void){
   esp_reset_reason_t reason = esp_reset_reason();
 
   if(reason == 3){
-    // ESP_LOGI(TAG, "restarted esp");
+    // settings mode
     initLed();
     lightLed("green");
     initStorageAndFiles(readmeStr, initialDataStr, 1);
     enterSettingsMode();
-    // settings mode
   }else{
     if(isButtonPressed()){
       esp_restart();
@@ -234,7 +214,6 @@ void app_main(void){
       initStorageAndFiles(readmeStr, initialDataStr, 2);
       initButtonForKeyboard();
       initLed();
-      // ESP_LOGI(TAG, "normal");
       enterMain();
     }
   }
